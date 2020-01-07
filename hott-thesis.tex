@@ -1,0 +1,933 @@
+%===============================================================================================%
+\documentclass{article}
+%-----------------------------------------------------------------------------------------------%
+\usepackage[letterpaper, bottom = 1.5in]{geometry}
+\usepackage{graphicx}
+\usepackage{amssymb}
+\usepackage{mathtools}
+\usepackage{amsthm}
+\usepackage{titlesec}
+\usepackage{tikz}
+\usepackage{enumitem}
+\usepackage{xcolor}
+\usepackage{bm}
+\usepackage[theorems, breakable, skins]{tcolorbox}
+\usepackage[T1]{fontenc}
+\usepackage{sfmath}
+\usepackage[sfdefault]{cabin}
+\usepackage{cite}
+%-----------------------------------------------------------------------------------------------%
+\setlist{nosep, leftmargin = 24pt}
+\setlist[itemize]{label = \( \bullet \)}
+\setlength{\arraycolsep}{2pt}
+\everydisplay{\textstyle}
+\tcbset{melanie/.style = {sharp corners, colback = white, left = 1mm, right = 1mm, top = 1mm, bottom = 1mm, beforeafter skip = 12pt, breakable, enhanced jigsaw, parbox = false}}
+\tcbset{melaniethm/.style = {colbacktitle = MPBthm!95!black, colframe = MPBthm, colupper = MPBthm!75!black, collower = MPBthm}}
+%-----------------------------------------------------------------------------------------------%
+\definecolor{MPBsection}{rgb} {  0, 0.3,   1}%{1,1,1}
+\definecolor{MPBtitle}  {rgb} {  0, 0.8,   1}%{1,1,1}
+\definecolor{MPBthm}    {rgb} {  0, 0.6, 0.6}%{1,1,1}
+\definecolor{MPBexample}{rgb} {0.1, 0.6, 0.4}%{1,1,1}
+\definecolor{MPBemph}   {rgb} {0.6, 0.2,   1}%{1,1,1}
+%-----------------------------------------------------------------------------------------------%
+\usepackage[linkbordercolor = MPBemph]{hyperref}
+%===============================================================================================%
+\titleformat*{\section}{\huge\scshape\bfseries\color{MPBsection}}
+\titleformat*{\subsection}{\Large\scshape\bfseries\color{MPBsection}}
+\titleformat*{\subsubsection}{\large\scshape\bfseries\color{MPBsection}}
+
+\newcommand{\defn}[1]{{\scshape\bfseries\color{MPBemph}#1}}
+\newcommand{\note}[1]{{\noindent\bfseries\color{MPBexample}#1}}
+\newcommand{\doctitle}[4][black]
+	{\begin{tcolorbox}[colback = white, colframe = #1, size = normal, rounded corners] \color{#1}
+	\begin{center}\resizebox{\textwidth}{!}{\bfseries #2} \\[10pt]
+	\resizebox{\textwidth - 2cm}{!}{#3~---~#4}
+	\end{center}\end{tcolorbox}}
+\renewcommand{\qed}{\hfill{\color{MPBthm}\( \blacksquare \)}}
+
+\newcommand{\infrule}[3]{\genfrac{}{}{}{}{#1}{#2}\hspace{1em}{\textsc{#3}}}
+\DeclareMathOperator{\ctx}{~ctx}
+\DeclareMathOperator{\type}{~type}
+\newcommand{\gives}{\vdash}
+\newcommand{\proves}{\looparrowright}
+\newcommand{\eql}{\mathbin{:\equiv}}
+\newcommand{\U}{\mathbf{U}}
+\DeclareMathOperator{\lift}{lift}
+\newcommand{\tpi}[1]{\prod_{(#1)}}
+\newcommand{\tsigma}[1]{\sum_{(#1)}}
+\DeclareMathOperator{\ind}{ind}
+\DeclareMathOperator{\pr}{pr}
+\newcommand{\1}{\textbf{1}}
+\newcommand{\0}{\mathbf{0}}
+\DeclareMathOperator{\inl}{in\ell}
+\DeclareMathOperator{\inr}{in\mathnormal{r}}
+\newcommand{\2}{\textbf{2}}
+\newcommand{\N}{\textbf{N}}
+\renewcommand{\succ}{\operatorname{succ}}
+\DeclareMathOperator{\refl}{refl}
+\newcommand{\dash}{\rule[0.5ex]{1.5ex}{0.4pt}}
+\DeclareMathOperator{\ap}{ap}
+\DeclareMathOperator{\transport}{transport}
+\DeclareMathOperator{\id}{id}
+\DeclareMathOperator{\apd}{apd}
+\DeclareMathOperator{\isEquiv}{isEquiv}
+\DeclareMathOperator{\qinv}{qinv}
+\DeclareMathOperator{\happly}{happly}
+\DeclareMathOperator{\funext}{funext}
+\DeclareMathOperator{\eqtoequiv}{eqtoequiv}
+\DeclareMathOperator{\ua}{ua}
+\newcommand{\abs}[1][\cdot]{\left|#1\right|}
+\newcommand{\norm}[1][\cdot]{\left\|#1\right\|}
+\DeclareMathOperator{\witness}{witness}
+\DeclareMathOperator{\isProp}{isProp}
+\DeclareMathOperator{\isSet}{isSet}
+\DeclareMathOperator{\Prop}{\textbf{Prop}}
+\newcommand{\isntype}[1][n]{\operatorname{is-}\!#1\!\operatorname{-type}}
+\DeclareMathOperator{\Set}{\textbf{Set}}
+\DeclareMathOperator{\noot}{not}
+\DeclareMathOperator{\AC}{AC}
+\DeclareMathOperator{\LEM}{LEM}
+\newcommand{\PropO}{\mathbf{\Omega}}
+\renewcommand{\P}{\textbf{P}}
+\DeclareMathOperator{\closed}{closed}
+\DeclareMathOperator{\assoc}{assoc}
+\DeclareMathOperator{\neutral}{neutral}
+\DeclareMathOperator{\Semigroup}{Semigroup}
+\DeclareMathOperator{\Monoid}{Monoid}
+\DeclareMathOperator{\lteq}{lteq}
+\DeclareMathOperator{\gteq}{gteq}
+\DeclareMathOperator{\lbd}{{\ell}bd}
+\DeclareMathOperator{\ubd}{ubd}
+\DeclareMathOperator{\Sus}{Sus}
+\DeclareMathOperator{\merid}{merid}
+\renewcommand{\S}{\textbf{S}}
+\DeclareMathOperator{\base}{base}
+\DeclareMathOperator{\looop}{loop}
+%-----------------------------------------------------------------------------------------------%
+\newcounter{thms}
+\newcommand\numberthis{\addtocounter{thms}{1}\tag{\thethms}}
+\newtcbtheorem[use counter = thms, number within = subsection]
+	{lemma}{Lemma}{melanie, melaniethm}{lem}
+\newtcbtheorem[number within = subsection, use counter from = lemma]
+	{thm}{Theorem}{melanie, melaniethm}{thm}
+\newtcbtheorem[number within = subsection, use counter from = lemma]
+	{corollary}{Corollary}{melanie, melaniethm}{cor}
+\newtcbtheorem[number within = subsection, use counter from = lemma]
+	{example}{example}{melanie, detach title, before upper = {\tcbtitle~}, coltitle = MPBexample, colback = white, colframe = MPBexample, terminator sign = {}, rounded corners}{ex}
+\renewtcolorbox{proof}[1][\proofname]{detach title, adjusted title = \emph{#1:}, coltitle = MPBthm, before upper = {\tcbtitle~~}, colframe = MPBthm, colback = MPBthm!15, size = small, beforeafter skip = 12pt, parbox = false, breakable}
+%===============================================================================================%
+
+\begin{document}
+\let\OD\displaystyle
+\let\displaystyle\textstyle
+%&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&%
+\doctitle[MPBtitle]{Homotopy Type Theory}{Melanie Brown}{MATH 4905}
+%===============================================================================================%
+\section{Introduction}
+Homotopy type theory (HoTT) is an exciting new branch of mathematics. Using ideas from topology, category theory, and algebraic geometry, it can be used as an alternative to Zermelo-Fraenkel (ZF) set theory as a foundation for mathematics. The purpose of this paper is threefold: to raise awareness for this exciting field of study; to challenge the reader to work in an unfamiliar formal system; and finally, to showcase alternative viewpoints for well-studied areas of classical mathematics.
+
+HoTT consists of a handful of additional axioms on top of a formal system known as \defn{intensional Martin-L\"of type theory} (IML). At the outset, this may seem like a very different system to the familiar universe of sets and elements of ZF theory. However, as the foundations are developed and we work our way up the ladder of abstraction, the reader will begin to notice the similarities and subtler differences between the two foundations.
+
+The paper is structured as follows. We begin by discussing formal systems in general, how they function, and what it means to ``do mathematics'' inside one. Then, we formulate the structure of IML using the language of formal systems, and describe a more comfortable syntax moving forward. Next we discuss the history of HoTT and the areas in which it makes IML more expressive. Finally, we describe the familiar notions of sets, predicates, and algebraic structures, and discuss some of the differences between the sets of HoTT and their classical ZF-theoretic analogues.
+%-----------------------------------------------------------------------------------------------%
+\section{Formal systems}
+A \defn{formal system} consists of four pieces of information. Firstly, there are the \defn{alphabet} and the \defn{grammar}. The alphabet of a formal system is a finite collection of symbols, and the grammar is a collection of rules according to which symbols can be arranged. Combinations of symbols that obey the grammar are called \defn{judgments} of the system. Additionally, any formal system has a collection of \defn{axioms}, or \defn{axiom schemata}, which are judgments or families of judgments that are asserted as ``valid''; and, a collection of \defn{inference rules}, such that any judgment inferred from the axioms is of equal ``validity''.
+
+A formal system can be imagined as a game, say, chess. The alphabet corresponds to the board squares and the pieces on them, and the grammar is given by the structural rules: there cannot be two pieces on the same tile; there cannot be two squares of the same colour adjacent to each other; each player must have a single king; etc. The ways in which the pieces move correspond to the inference rules, and the only ``axiom'' is the initial board, shown here:
+\begin{center}
+	\includegraphics[width = 5.5cm]{chess-axiom} \\[3pt]
+	Figure 1: The axiom of the formal system of chess.
+\end{center}
+%-----------------------------------------------------------------------------------------------%
+\subsection{Inference rules}
+We write inference rules in the following way. For judgments \( J_{1}, \dotsc, J_{k}, J \), we say that the rule
+\[ \OD \infrule{J_{1} \hspace{1em} \cdots \hspace{1em} J_{k}}{J}{inference-ex} \]
+has as \defn{premises} the judgments \( J_{1}, \dotsc, J_{k} \), as a \defn{conclusion} the judgment \( J \), and is given the name \textsc{inference-ex}. Each inference rule has only one judgment as a conclusion, but may have multiple premises.
+
+In a game, we cannot play the ``next move'' unless we have a position from which to begin. Just so, in a formal theory, we must have a \defn{context of inference}, or a non-empty list of judgments, in order to apply the inference rules. Axioms \( A \) can be thought of as inference rules with an empty list of premises, so their inference rules would have the form
+\[ \OD \infrule{}{\;A\;}{axiom-assert}. \]
+Another inference rule with no premises that is present in all formal systems is
+\[ \OD \infrule{}{\hspace{1.5ex} \ctx}{ctx-empty}, \]
+where for some (possibly empty) list of judgments \( \Gamma = J_{1}, \dotsc, J_{k} \), the judgment
+\[ \Gamma \ctx \]
+is the assertion that \( \Gamma \) is indeed a context of inference. Another inference rule, for a list of judgments \( \Gamma \) and judgment \( J \), is available:
+\[ \OD \infrule{\Gamma \ctx \hspace{1em} J}{\Gamma, J \ctx}{ctx-extend}, \]
+which states that any context can be expanded to include additional judgments. One rule that is useful, but unnecessary, is the following:
+\[ \OD \infrule{J_{1}, \dotsc, J_{k} \ctx}{J_{i}}{assumption-\( i \)} \]
+for \( 1 \leq i \leq k \).
+%-----------------------------------------------------------------------------------------------%
+\subsection{Theorems and provability}
+It is critical to remember that \emph{judgments do not have truth values}: they represent combinations of symbols that are well-formed according to the grammar rules of the formal system. For a judgment \( J \) of the formal system, and a context \( \Gamma \), the judgment
+\[ \Gamma \gives J \]
+means that \defn{\( \Gamma \) gives \( J \)}; that is, that if we have all of the judgments in \( \Gamma \), then we are free to use the additional judgment \( J \) as if it were an axiom. There is an inference rule that encapsulates this:
+\[ \OD \infrule{\Gamma \ctx \hspace{1em} \Gamma \gives J}{J}{conclude-given}. \]
+This concept can be illuminated further with the rule
+\[ \OD \infrule{J_{1},\dotsc, J_{k} \ctx}{J_{1},\dotsc, J_{k} \gives J_{i}}{given-\( i \)} \]
+for each \( 1 \leq i \leq k \). This is very similar to \textsc{assumption-\( i \)}; indeed, as alluded above, the latter is unnecessary because of the rule \textsc{given-\( i \)}, since by applying \textsc{conclude-given} we may conclude \( J_{i} \).
+
+The concept of \emph{proof} in a formal system is located entirely within the domain of inference rules, when we ask a question like
+\[ \text{Does the context \( \Gamma \) allow for the conclusion of the judgment \( J \)?} \]
+when we do not know that \( J \) is given by \( \Gamma \). In this case, we say that \defn{\( \Gamma \) proves \( J \)}. This is also a judgment.
+%-----------------------------------------------------------------------------------------------%
+\begin{example}{}{chess-unreachable}
+	Consider the following chessboard:\vspace{6pt}
+	\begin{center}
+		\includegraphics[width = 5.5cm]{chess-unreachable} \\[3pt]
+		Figure 2: The white king has switched places with the white queen.
+	\end{center}
+	While this is a well-formed judgment according to the grammar, it is not a theorem: there is no way to reach this position from the initial board in Figure 1, since to swap the king and queen would require the move of a white pawn, which cannot move back to the home row, as well as taking more than one turn, forcing the player in black to move their pawns as well. Hence this is not a ``theorem'', or legal position, of chess.
+\end{example}
+%-----------------------------------------------------------------------------------------------%
+\subsection{Definitions}
+Often, mathematicians define new concepts in terms of old ones, perhaps for brevity or to highlight a particular perspective. We can do this in any formal system, by using a symbol to denote another, or another list of symbols (as we have done above with \( \Gamma \)). We will write
+\[ Y \eql X \]
+to denote the judgment that the symbol \( Y \) is \defn{defined} to represent the same thing that is represented by the symbol \( X \). That is, \( Y \) and \( X \) are semantically the same, and can be substituted for one another wherever they arise. This act of replacement forms an equivalence relation, which we call \defn{synonymy}. To say that the symbols \( X \) and \( Y \) are synonymous is a judgment, written \( X \equiv Y \), and we write the inference rules to convey the equivalence in a context \( \Gamma \):
+\[ \OD \infrule{\Gamma \gives X}{\Gamma \gives X \equiv X}{syn-refl} \hspace{35pt} \infrule{\Gamma \gives X \hspace{1em} \Gamma \gives Y \hspace{1em} \Gamma \gives X \equiv Y}{\Gamma \gives Y \equiv X}{syn-symm} \]
+\[ \OD \infrule{\Gamma \gives X \hspace{1em} \Gamma \gives Y \hspace{1em} \Gamma \gives Z \hspace{1em} \Gamma \gives X \equiv Y \hspace{1em} \Gamma \gives Y \equiv Z}{\Gamma \gives X \equiv Z}{syn-trans}. \]
+Since definitions grant synonymy, we also have
+\[ \OD \infrule{Y \eql X}{Y \equiv X}{def-syn}. \]
+%===============================================================================================%
+\section{Intensional type theory}
+Intensional Martin-L\"of type theory (IML) was developed during the 1970s and 1980s, with the most widely-accepted version published in 1982. This is the version that we will describe and use. In this formal system, we have new forms of judgments, the first being
+\[ X \type \]
+for a symbol \( X \) in the alphabet, and the second form
+\[ \alpha : X \]
+for symbols \( \alpha, X \). The first is referred to as the \defn{typing} judgment: the symbol \( X \) is said to represent a \defn{type} that certain objects might have. The second is the \defn{term-of} judgment: it says that the symbol \( \alpha \) represents a \defn{term} having the type \( X \). Of course, in order for the second judgment to make sense, we must be working in a context where \( X \) has already occurred in a judgment of the form ``\( X \type \)''.
+
+Synonymy in IML arises only between types or between terms of synonymous types. That is, within a context \( \Gamma \), we have the inference rules
+\[ \OD \infrule{\Gamma \gives X \type \hspace{1em} \Gamma \gives \alpha : X}{\Gamma \gives \alpha \equiv \alpha}{syn-refl-terms}, \]
+\[ \OD \infrule{\Gamma \gives X \type \hspace{1em} \Gamma \gives Y \type \hspace{1em} \Gamma \gives X \equiv Y \hspace{1em} \Gamma \gives \alpha : X}{\Gamma \gives \alpha : Y}{term-of-syn-types}. \]
+We say, in English, the phrase ``let \( X \) be a type'' to refer to the judgment ``\( X \type \)'' in the formal system, and the phrase ``let \( \alpha \) be a term of type \( X \)'' to refer to the ordered pair of judgments ``\( X \type \), \( \alpha : X \)'', unless ``\( X \type \)'' has already been declared; in this case we can refer simply to ``\( \alpha : X \)''.
+%-----------------------------------------------------------------------------------------------%
+\subsection{Universes}
+The first type we will see is called the \defn{base universe}, and is denoted \( \U_{0} \). A \defn{universe}, of which the base universe is the smallest, is a type, whose terms can also be considered types. There are two frameworks for this consideration: first, the \emph{Russell-style} framework, which posits the following, for each \( i = 0, 1, 2, \dotsc \):
+\[ \OD \infrule{}{\U_{i} \type}{univ-is-type}, \hspace{33pt} \infrule{}{\U_{i} : \U_{i + 1}}{univ-contain}, \]
+\[ \OD \infrule{\Gamma \ctx \hspace{1em} \Gamma \gives X : \U_{i}}{\Gamma \gives X \type}{u-terms-are-types}, \hspace{33pt} \infrule{X : \U_{i}}{X : \U_{i + 1}}{univ-subsume}. \]
+The \emph{Tarski-style} framework, however, in addition to \textsc{univ-is-type}, posits operators \( T_{i} \) and \( \lift_{i + 1} \) for each such \( i \), that act on the terms of \( \U_{i} \) in the following way:
+\[ \OD \infrule{}{u_{i} : \U_{i + 1}}{canonical-term-\( i \)}, \hspace{33pt} \infrule{\Gamma \ctx \hspace{1em} \Gamma \gives X : \U_{i}}{\Gamma \gives T_{i}(X) \type}{type-of-u-term}, \]
+\[ \OD \infrule{}{T_{i + 1}(u_{i}) \equiv \U_{i + 1}}{type-of-canon}, \hspace{50pt} \infrule{\Gamma \ctx \hspace{1em} \Gamma \gives X : \U_{i}}{\Gamma \gives \lift_{i + 1}(X) : \U_{i + 1}}{lift-\( i \)-term}. \]
+There are also some coherence rules, found in the last chapter of \cite{mltt}, that describe the way the operators \( T_{i} \) and \( \lift_{i + 1} \) interact with the other type formers we will see below. They are omitted here, save to mention that the coherences are as one would expect.
+%-----------------------------------------------------------------------------------------------%
+\begin{example}{Key differences between frameworks}{}~\\[3pt]
+	We may have a canonical construction of some type \( X \), that exists at each universe level. Let two such constructions \( X_{i} : \U_{i} \) and \( X_{i + 1} : \U_{i + 1} \) be given. In the Russell-style framework, where \( \U_{i} : \U_{i + 1} \), we have \( X_{i} : \U_{i + 1} \) through \textsc{univ-subsume}, but then the types \( X_{i} \) and \( X_{i + 1} \) are distinct, in that we can never obtain the judgment \( X_{i} \equiv X_{i + 1} \). In the Tarski-style framework, however, we can allow \( \lift_{i + 1}(X_{i}) \equiv X_{i + 1} \), because the definition of \( X_{i} \) in \( \U_{i} \) is ``wrapped inside'' the \( \lift_{i + 1} \) operator. The constructions of \( X_{i} \) and \( X_{i + 1} \) are essentially the same, but on different levels; the wrapping lets us make precise that fact. See \cite{luo} for a deeper discussion.
+\end{example}
+%-----------------------------------------------------------------------------------------------%
+The Russell-style framework's rule \textsc{u-terms-are-types} allows us to write \( X : \U_{i} \) to instantly infer that \( X \) is a well-formed type, while also specifying its place in the universe ``hierarchy''. We will work in this framework for the most part, for its simplicity, and because constructions in it can be translated without great effort into the Tarski-style framework. We will also frequently be working in a situation where the particular universe level does not matter, so in these cases we omit the subscript and simply write \( X : \U \) to mean \( X \type \).
+%-----------------------------------------------------------------------------------------------%
+\subsection{Making useful types}
+In order to actually make use of ``types'' in general, we must supply additional information. There are five collections of rules that we must specify in order to \emph{use} a type:
+\begin{enumerate}
+	\item \textbf{formation rules}, that specify what information is needed to make the type;
+	\item \textbf{construction rules}, that govern the creation of terms of the type;
+	\item \textbf{elimination rules}, that allow for the definition of \emph{functions} using those terms;
+	\item \textbf{computation rules}, that demonstrate how eliminators act on constructors;
+	\item and \textbf{uniqueness principles}, that describe what terms of the type look like compared to the constituent information from the formation rules.
+\end{enumerate}
+In many cases, the fifth set of rules is actually not required outright, but can be proven from the other four; hence the distinction between rules and principles. Here, a ``function'' refers to a \( \lambda \)-expression, as used in Church's \( \lambda \)-calculus, whose input has the type we are forming, and whose output is a sequence of symbols that refer to a term of another type. We write such expressions in the form
+\[ \lambda(\alpha : X).~~ (\varphi(\alpha) : Y), \]
+in a context where the judgment ``\( Y \type \)'' has occurred.
+
+We will see several examples of types formed from other types, as well as some concrete types, to ensure that we aren't doing work for no reason. Then, we'll see how we can use type formers to recreate classical structures in this new system.
+
+For the moment, it will help to imagine types as classical sets, whose terms can be thought of as the elements of the set. But be careful: there is no membership predicate in type theory! Whereas in set theory, one may have elements without sets, it is impossible in type theory to have terms without types.
+%-----------------------------------------------------------------------------------------------%
+\subsubsection{Function types}
+Let \( \Gamma \) be a context that gives \( X \type \). Suppose that, with a term \( x : X \), we can create a new type \( Z(x) \). Then we are given the \defn{(dependent) function type} (or \defn{\( \Pi \)-type}), written
+\[ \big( \tpi{x : X} Z(x) \big) : \U. \]
+Formally, this is expressed by the rule
+\[ \OD \infrule{\Gamma \ctx \hspace{1em} \Gamma \gives X : \U \hspace{1em} \Gamma, x : X \gives Z(x) : \U}{\Gamma \gives \tpi{x : X} Z(x) : \U}{\( \Pi \)-form}. \]
+As described above, terms of this type are given by \( \lambda \)-expressions, like so:
+\[ \OD \infrule{\Gamma, x : X \gives z : Z(x)}{\Gamma \gives \big( \lambda(x : X).~~ (z : Z(x)) \big) : \tpi{x : X} Z(x)}{\( \Pi \)-constr}. \]
+The name ``dependent'' comes from the fact that the type \( Z(x) \) depends on the term \( x : X \) that was given. If in fact we have \( \Gamma \gives Z \) without requiring that assumption, we can form the type of \defn{independent functions}, written
+\[ X \to Z \eql \tpi{x : X} Z. \]
+The same inference rules apply, but the extra assumption \( x : X \) next to the context \( \Gamma \) may be disregarded. For example, its formation rule:
+\[ \OD \infrule{\Gamma \ctx \hspace{1em} \Gamma \gives X : \U \hspace{1em} \Gamma \gives Z : \U}{\Gamma \gives X \to Z : \U}{\( \to \)-form}. \]
+
+The elimination for the dependent function type is given as follows:
+\[ \OD \infrule{\Gamma \gives f : \tpi{x : X} Z(x) \hspace{1em} \Gamma \gives y : X}{\Gamma \gives f(y) : Z(y)}{\( \Pi \)-elim}, \]
+where \( Z(y) \) is the type given by replacing each instance of the symbol \( x \), in both the expression \( f \) and the type \( Z(x) \) as formed above, to the symbol \( y \).
+
+The computation rule for dependent functions is given by
+\[ \OD \infrule{\Gamma, x : X \gives z : Z \hspace{1em} \Gamma \gives y : X}{\Gamma \gives \big( \lambda(x : X).~~(z : Z(x)) \big)(y) \equiv z[y/x] : Z(y)}{\( \Pi \)-comp}, \]
+where \( z[y/x] \) indicates the \( \alpha \)-renaming of \( x \) to \( y \) in the sequence of symbols that give \( z \) in the assumptions. Once again, in the case where the type \( Z \) is independent of the term \( x : X \), we may drop the assumption and we need perform no \( \alpha \)-renaming in the elimination or computation rules.
+
+The function type is the only case for which we will define a uniqueness rule.
+\[ \OD \infrule{\Gamma \gives f : \tpi{x : X} Z(x)}{\Gamma \gives f \equiv \big( \lambda(x : X).~~f(x) \big) : \tpi{x : X} Z(x)}{\( \Pi \)-uniq}. \]
+This rule states that a function is synonymous with the action of applying itself to an input.
+
+Applying functions is the only way, save by definition, of concluding synonymy. We will see a weaker notion of ``sameness'', called \defn{equality}, as another type former later on. The fact that equality is weaker than synonymy is what allows it to be more easily concluded: it is far less frequent that two things have the same definition than that they are equal!
+
+The notion of \defn{function composition} can be defined for dependent functions, but we will use this example to demonstrate independent functions. Let \( X, Y, Z \) be types, and suppose we have \( f : X \to Y \) and \( g : Y \to Z \). Then their composition
+\[ g \circ f \eql \big( \lambda(x : X).~~(g(f(x))) \big) : X \to Z. \]
+This operation is synonymously associative: that is, supposing \( h : Z \to W \), then
+\[ h \circ (g \circ f) \equiv (h \circ g) \circ f. \]
+%-----------------------------------------------------------------------------------------------%
+\subsubsection{Pair types}
+Let \( \Gamma \) be a context giving the type \( X \), and suppose that from some \( x : X \) we can create the type \( Y(x) \). Then \( \Gamma \) also gives the \defn{(dependent) pair type} (or \defn{\( \Sigma \)-type}), written
+\[ \big( \tsigma{x : X} Y(x) \big) : \U. \]
+Formally, this is expressed by the rule
+\[ \OD \infrule{\Gamma \ctx \hspace{1em} \Gamma \gives X : \U \hspace{1em} \Gamma, x : X \gives Y(x) : \U}{\Gamma \gives \tsigma{x : X} Y(x) : \U}{\( \Sigma \)-form}. \]
+We want the terms of this type to be pairs of terms \( (x : X, y : Y(x)) \), where the type of the second term depends on the first term. Again, in the case where \( Y(x) \) does not depend on the specific term of \( X \), we have an \defn{independent} pair type, also called the \defn{product type}, that we denote by
+\[ X \times Y \eql \tsigma{x : X} Y. \]
+The same tricks as above apply for creating independent pairs from the rules for dependent pairs: ignore the extra \( x : X \) assumption immediately following the context \( \Gamma \). For example, we can write
+\[ \OD \infrule{\Gamma \ctx \hspace{1em} \Gamma \gives X : \U \hspace{1em} \Gamma \gives Y : \U}{\Gamma \gives X \times Y : \U}{\( \times \)-form}. \]
+
+The construction rule for pair types is given by
+\[ \OD \infrule{\Gamma, x : X \gives Y(x) : \U \hspace{1em} \Gamma \gives a : X \hspace{1em} \Gamma \gives y : Y(a)}{\Gamma \gives (a, y) : \tsigma{x : X} Y(x)}{\( \Sigma \)-intro}. \]
+Again, the type \( Y(a) \) is simply the \( \alpha \)-renaming of \( x \) to \( a \) in the type \( Y(x) \).
+
+The elimination rule is often called the \defn{induction principle} of the type. This is an allusion to the natural numbers case, whereby specifying a ``basepoint'' and ``step'', we obtain a way of describing functions out of any number. The analogy here is that, by specifying a first coordinate, and a second depending on that, we can describe how to obtain functions out of any pair:
+\[ \OD \infrule{\Gamma, z : \tsigma{x : X} Y(x) \gives C(z) : \U \hspace{1em} \Gamma, x : X, y : Y(x) \gives c : C((x, y)) \hspace{1em} \Gamma \gives p : \tsigma{x : X} Y(x)}{\Gamma \gives \ind_{\Sigma}(C, c[p/(x, y)], p) : C(p)}{\( \Sigma \)-elim}. \]
+Inside the bracket in the conclusion, the term \( C \) refers to the \defn{type family} \( C : \tsigma{x : X} Y(x) \to \U \). A type family is a special function, whose output type is a universe; that is, its values are types. The type family \( C \) was specified in the first assumption of this rule, since we assume that for an unspecified \( z : \tsigma{x : X} Y(x) \) we could create some type \( C(z) \); this is a special case of \textsc{\( \Pi \)-form}. Indeed, we can also consider \( Y : X \to \U \) as a type family.
+
+The computation rule for dependent pairs is given as follows:
+\[ \OD {\small\infrule{\Gamma, z : \tsigma{x : X} Y(x) \gives C(z) : \U \hspace{1em} \Gamma, x : X, y : Y(x) \gives c : C((x, y)) \hspace{1em} \Gamma \gives a : X \hspace{1em} \Gamma \gives b : Y(a)}{\Gamma \gives \ind_{\Sigma}(C, c[(a, b)/(x, y)], (a, b)) \equiv c[(a, b)/(x, y)] : C((a, b))}{\( \Sigma \)-comp}}. \]
+As we noted above, computation rules specify how eliminators act on constructors, which in this case are the terms \( a : X \) and \( b : Y(a) \). We conclude here that eliminating the pair \( (a, b) \) through \( \ind_{\Sigma} \) is synonymous with the term \( c \) where \( (x, y) \) has been \( \alpha \)-renamed to \( (a, b) \).
+
+We will no longer specify uniqueness principles, since the other type constructions we will see have provable, rather than given, such principles. Instead, let's study \( \ind_{\Sigma} \). We can consider this as a function! But what is its type? Let's suppose we are using \( X : \U \), \( Y : X \to \U \), and \( \tsigma{x : X} Y(x) : \U \), as above. Then
+\[ \ind_{\Sigma} : \tpi{C : \tsigma{x : X} Y(x) \to \U} \big( \tpi{x : X} \tpi{y : Y(x)} C((x, y)) \big) \to \big( \tpi{p : \tsigma{x : X} Y(x)} C(p) \big). \]
+Let's break this down. \begin{itemize}
+	\item First, we specify a type family \( C : \tsigma{x : X} Y(x) \to \U \).
+	\item Then, we have a two-argument dependent function, taking a term \( x : X \) and, dependently, a term \( y : Y(x) \), returning \emph{dependently on both} a term \( c : C((x, y)) \). Recall that \( (x, y) \) specified in this way has the type \( \tsigma{x : X} Y(x) \), so it makes sense to apply \( C \) to it.
+	\item Finally, the output type of \( \ind_{\Sigma} \): we have a function that takes any pair \( p : \tsigma{x : X} Y(x) \) and yields a term of \( C(p) \).
+\end{itemize}
+The computation rule states that, given \( (a, b) : \tsigma{x : X} Y(x) \), the term given by \( \ind_{\Sigma}(C, c, (a, b)) \) is synonymous with the \( \alpha \)-renaming of \( (x, y) \) in the definition of \( c \) to \( (a, b) \).
+
+We can use this notation to capture the elimination and computation rules in a single function definition. Let's see this with \( \ind_{\times} \). Suppose we have \( X, Y : \U \), and \( X \times Y : \U \). Then
+\[ \begin{array}{c}
+	\ind_{\times} : \tpi{C : X \times Y \to \U} \big( \tpi{x : X} \tpi{y : Y} C((x, y)) \big) \to \big( \tpi{p : X \times Y} C(p) \big) \\[3pt]
+	\ind_{\times}(C, f, (a, b)) \eql f(a, b).
+\end{array} \]
+Here, the term \( f : \tpi{x : X} \tpi{y : Y} C((x, y)) \) represents the two-argument function, so that the ``dummy variables'' \( x : X \), \( y : Y \) never have to be specified in the definition. Since \( \ind_{\times} \) is \emph{defined} as being the output of \( f \) applied to \( a \) and \( b \), we \emph{must} have the proper synonymy given by the computation rule.
+
+For pair types, we have the \defn{projection functions}
+\[ \begin{array}{c}
+	\pr_{1} : \tsigma{x : X} Y(x) \to X \\
+	\pr_{2} : \tpi{z : \tsigma{x : X} Y(x)} Y(\pr_{1}(z)).
+\end{array} \]
+In the independent case, we simply write \( \pr_{1} : X \times Y \to X \) and \( \pr_{2} : X \times Y \to Y \).
+%-----------------------------------------------------------------------------------------------%
+\subsubsection{Concrete types}
+Our first concrete type, we want the \defn{unit type} \( \1 : \U_{0} \) to have a single term, canonically named \( \star : \1 \). We would like to be able to use it at any time. Thus its formation and construction rules are given by
+\[ \OD \infrule{\Gamma \ctx}{\Gamma \gives \1 : \U}{\( \1 \)-form}, \hspace{50pt} \infrule{\Gamma \ctx}{\Gamma \gives \star : \1}{\( \1 \)-intro}. \]
+We do not know \emph{a priori} that \( \star \) is the unique term of \( \1 \), but we can write our induction principle so that it behaves this way:
+\[ \begin{array}{c}
+	\ind_{\1} : \tpi{C : \1 \to \U} C(\star) \to \tpi{u : \1} C(u) \\[3pt]
+	\ind_{\1}(C, c, \star) \eql c.
+\end{array} \]
+Since the computation rule is the action of the eliminators on the constructors, the only thing to which we know how to apply \( \ind_{\1} \) is \( \star : \1 \).
+
+Another concrete type is the \defn{empty type} \( \0 : \U \). It is special in that it has no construction rule, and therefore no computation rule. We have only
+\[ \OD \infrule{\Gamma \ctx}{\Gamma \gives \0 : \U}{\( \0 \)-form}, \hspace{50pt} \infrule{\Gamma, x : \0 \gives C(x) : \U \hspace{1em} \Gamma \gives {!} : \0}{\Gamma \gives \ind_{\0}(C, !) : C(!)}{\( \0 \)-elim}. \]
+Since \( \0 \) has no constructors, if we find a term \( ! : \0 \), we call it a \defn{contradiction}.
+
+Since type families from \( \0 \) cannot technically depend on the particular term of \( \0 \), since there are no constructors on which to act, the induction principle can instead be stated for a general type \( C : \U \),
+\[ \ind_{\0}(C) : \0 \to C, \]
+with no definition. That is, if we manage to find a term of \( \0 \), we can create a term of any type. This captures the principle of \emph{ex falso quodlibet}: from a contradiction, anything follows.
+%-----------------------------------------------------------------------------------------------%
+\subsubsection{Coproduct types}
+A type former may have more than one construction rule, at the cost of multiple computation rules. A simple example of this is the \defn{coproduct type}, formed by the rule
+\[ \OD \infrule{\Gamma \ctx \hspace{1em} \Gamma \gives X : \U \hspace{1em} \Gamma \gives Y : \U}{\Gamma \gives X + Y : \U}{\( + \)-form}. \]
+Its constructors are the independent functions \( \inl : X \to X + Y \) and \( \inr : Y \to X + Y \). The induction principle is then defined by \defn{pattern matching} on each of the possible constructors:
+\[ \begin{array}{c}
+	\ind_{+} : \tpi{C : X + Y \to \U} (\tpi{x : X} C(x)) \to (\tpi{y : Y} C(y)) \to \tpi{q : X + Y} C(q) \\[3pt]
+	\begin{array}{rcl}
+		\ind_{+}(C, c_{\ell}, c_{r}, \inl(x)) &\eql& c_{\ell}(x), \\
+		\ind_{+}(C, c_{\ell}, c_{r}, \inr(y)) &\eql& c_{r}(y).
+	\end{array}
+\end{array} \]
+%-----------------------------------------------------------------------------------------------%
+\begin{example}{The type of \emph{Booleans}, \( \2 \eql \1 + \1 \)}{}\\[3pt]
+	We give the names \( 0_{\2} \eql \inl(\star) \) and \( 1_{\2} \eql \inr(\star) \) for clarity. By combining \( \ind_{+} \) and \( \ind_{\1} \), we obtain\vspace{-3pt}
+	\[ \begin{array}{c}
+		\ind_{\2} : \tpi{C : \2 \to \U} C(0_{\2}) \to C(1_{\2}) \to \tpi{b : \2} C(b) \\[3pt]
+		\begin{array}{rcl}
+			\ind_{\2}(C, c_{0}, c_{1}, 0_{\2}) &\eql& c_{0}, \\
+			\ind_{\2}(C, c_{0}, c_{1}, 1_{\2}) &\eql& c_{1}.
+		\end{array}
+	\end{array}\vspace{-3pt} \]
+	This corresponds to the \emph{if-then-else} construct in computer science, or rather, \emph{then-else-if}.
+\end{example}
+%-----------------------------------------------------------------------------------------------%
+\subsubsection{Natural numbers}
+Another type with multiple constructors is the type of \defn{natural numbers}. In fact, this is a concrete type, and its constructors have types that are dissimilar in structure. The formation rule is
+\[ \OD \infrule{\Gamma \ctx}{\Gamma \gives \N : \U}{\( \N \)-form}. \]
+Its constructors are the terms \( 0 : \N \) and \( \succ : \N \to \N \). This is an example of an \defn{inductive type}, one whose terms are generated by all possible combinations of its constructors. In this case, its well-formed terms are of the form \( 0 : \N \) or \( \succ(n) : \N \) for some \( n : \N \). The induction principle now earns its namesake:
+\[ \begin{array}{c}
+	\ind_{\N} : \tpi{C : \N \to \U} C(0) \to \big( \tpi{n : \N} C(n) \to C(\succ(n)) \big) \to \tpi{n : \N} C(n) \\[3pt]
+	\begin{array}{rcl}
+		\ind_{\N}(C, c_{0}, c_{s}, 0) &\eql& c_{0}, \\
+		\ind_{\N}(C, c_{0}, c_{s}, \succ(n)) &\eql& c_{s}(n, \ind_{\N}(C, c_{0}, c_{s}, n)).
+	\end{array}
+\end{array} \]
+Hence, functions out of the natural numbers are defined by primitive recursion, as is familiar in traditional mathematics.
+%-----------------------------------------------------------------------------------------------%
+\subsubsection{Equality types}
+As previously foreshadowed, for each type \( X \) there is a type former \( {=_{X}} : X \to X \to \U \) that represents equality between two terms of a type. That is, given a type \( X \) and two of its terms \( x, y \), there is a type \( x =_{X} y \), whose terms are proofs of the equality of \( x \) and \( y \). When the type \( X \) is clear, we write \( x = y \). The terms of this type are also called \defn{paths} between \( x \) and \( y \); here we begin to see the roots of homotopy theory. Let's consider its rules.
+\[ \OD \infrule{\Gamma \ctx \hspace{1em} \Gamma \gives X : \U \hspace{1em} \Gamma \gives x, y : X}{\Gamma \gives x =_{X} y : \U}{\( = \)-form}. \]
+Nothing special here. It has only one constructor, named \defn{reflexivity}:
+\[ \OD \infrule{\Gamma \gives x : X}{\Gamma \gives \refl_{x} : x =_{X} x}{\( = \)-constr}. \]
+Note that the construction rule also grants that synonymy entails equality. This is not to say the only terms of this type take the form of reflexivity; indeed, when considering \( x = y \) where \( x \not\equiv y \), we cannot simplify or inspect its terms. However, we still have the induction principle:
+\[ \begin{array}{c}
+	\ind_{=} : \tpi{C : \tpi{x, y : X} (x =_{X} y) \to \U} \big( \tpi{x : X} C(x, x, \refl_{x}) \big) \to \tpi{x, y : X} \tpi{p : x =_{X} y} C(x, y, p) \\[3pt]
+	\ind_{=}(C, c, x, x, \refl_{x}) \eql c(x).
+\end{array} \]
+In this way, the type family \( (x =) : X \to \U \) is inductively generated by paths of the form \( \refl_{x} \). If we imagine \( \refl_{x} \) to be the ``stay-still path'', the type family is induced by moving a single endpoint of that path around the entire space.%-----------------------------------------------------------------------------------------------%
+\begin{thm}{Path inversion}{path-inv} Let \( X \) be a type and \( x, y : X \). Suppose \( p : x = y \). Then there is a term \( p^{-1} : y = x \), called the \defn{inverse} of \( p \).
+\begin{proof}[Quick proof]
+	According to the induction principle for equality types (also called \defn{path induction}), it suffices to consider the case when \( x \equiv y \) and \( p \equiv \refl_{x} \) in order to generate the result for the entire type of paths \( x = y \). But in that case, we can define \( {\refl_{x}^{-1}} \eql \refl_{x} : x = x \). Hence through path induction, we obtain \( p^{-1} : y = x \). \qed
+\end{proof}
+\begin{proof}[Detailed proof]
+	Let \( C : \tpi{x, y : X} (x = y) \to \U \) be defined by \( C(x, y, p) \eql (y = x) \). Then we have a function
+	\[ c \eql \big(\lambda(x : X).~{\refl_{x}}\big) : \tpi{x : X} C(x, x, \refl_{x}). \]
+	By the induction principle for equality types, we have \( \ind_{=}(C, c, x, y, p) : y = x \) for each \( p : x = y \). Hence we can define
+	\[ (\dash)^{-1} \eql \lambda(p : x = y).~~(\ind_{=}(C, c, x, y, p) : y = x), \]
+	so that \( {\refl_{x}^{-1}} \eql c(x) \equiv \refl_{x} \). \qed
+\end{proof} \end{thm}
+%-----------------------------------------------------------------------------------------------%
+\begin{thm}{Path concatenation}{} Let \( X \) be a type and \( x, y, z : X \). Suppose \( p : x = y \) and \( q : y = z \). Then there is a term \( p \bullet q : x = z \), called the \defn{concatenation} of \( p \) and \( q \).
+\begin{proof}[Quick proof]
+	By path induction on \( p \), we may assume \( x \equiv y \) and \( p \equiv \refl_{x} \). By induction on \( q \), we may assume \( x \equiv z \) and \( q \equiv \refl_{x} \). Hence it suffices to set \( \refl_{x} \bullet \refl_{x} \eql \refl_{x} : x = x \). \qed
+\end{proof}
+\begin{proof}[Detailed proof]
+	Let \( C : \tpi{x, y : X} (x = y) \to \U \) be defined by \( C(x, y, p) \eql \tpi{z : X} \tpi{q : y = z} (x = z) \). Note that \( C(x, x, \refl_{x}) \equiv \tpi{z : X} \tpi{q : x = z} (x = z) \). In order to apply the path induction principle, we need a function with the type \( \tpi{x : X} C(x, x, \refl_{x}) \).
+	
+	Let also \( D : \tpi{x, z : X} \tpi{q : x = z} \U \) be defined by \( D(x, z, q) \eql (x = z) \). Note that \( D(x, x, \refl_{x}) \equiv (x = x) \). Then we have a function
+	\[ d \eql (\lambda(x : X).~\refl_{x}) : \tpi{x : X} D(x, x, \refl_{x}). \]
+	By the induction principle for equality types applied to \( D \), we obtain a function
+	\[ c \eql \ind_{=}(D, d) : \tpi{x, z : X} \tpi{q : x = z} D(x, z, q), \]
+	which is in fact \( \tpi{x, z : X} \tpi{q : x = z} (x = z) \equiv \tpi{x : X} C(x, x, \refl_{x}) \).
+	By the induction principle for equality types in the case of \( C \), we now have a function of type
+	\[ \ind_{=}(C, c) : \tpi{x, y, z : X} (y = z) \to (x = y) \to (x = z). \]
+	We set \( (\dash \bullet \dash) \) to be this function, so that \( \refl_{x} \bullet \refl_{x} \eql \refl_{x} \). \qed
+\end{proof} \end{thm}
+%-----------------------------------------------------------------------------------------------%
+Inversion corresponds to symmetry of equality, and concatenation to its transitivity. Thus equality is an equivalence relation on every type \( X \). Also, given \( x, y : X \), and \( p, q : x = y \), we have the type \( p = q \), and for each \( \alpha, \beta : p = q \), we have the type \( \alpha = \beta \), and so on...
+
+We can view terms of a type \( X \) as objects, and paths between them as morphisms, and paths between those paths as 2-morphisms, and so on. The structure generated by repeated applications of the equality type former corresponds to the category-theoretic notion of an \defn{\( \infty \)-groupoid}, since each morphism is invertible (by \textbf{\color{MPBthm}\ref{thm:path-inv}}). Every type is hence an \( \infty \)-groupoid. With the right definitions, it is actually a theorem that every topological space is a groupoid, and vice versa. In general, however, this statement is known as the \emph{homotopy hypothesis}.
+%-----------------------------------------------------------------------------------------------%
+\begin{thm}{Some important 2-paths}{} Let \( X : \U \) with \( x, y, z, w : X \). Suppose \( p : x = y \), \( q : y = z \), \( r : z = w \). Then we can construct terms of the following types:
+\begin{enumerate}
+	\item \( p = {\refl_{x}} \bullet p \);
+	\item \( p = p \bullet {\refl_{y}} \);
+	\item \( p^{-1} \bullet p = \refl_{y} \);
+	\item \( p \bullet p^{-1} = \refl_{x} \);
+	\item \( (p^{-1})^{-1} = p \);
+	\item \( p \bullet (q \bullet r) = (p \bullet q) \bullet r \).
+\end{enumerate} \end{thm}
+%-----------------------------------------------------------------------------------------------%
+One would expect that, just as is the case with synonymous symbols, equal terms should preserve their equality under a function. This is formalized by the following lemma.
+%-----------------------------------------------------------------------------------------------%
+\begin{thm}{Path application}{} Let \( X, Y : \U \) and \( f : X \to Y \). There is a term
+\[ \ap_{f} : \tpi{x, y : X} (x = y) \to (f(x) = f(y)). \]
+\begin{proof}
+	Let \( x, y : X \) and suppose \( p : x = y \). By path induction on \( p \), we may assume \( x \equiv y \) and \( p \equiv \refl_{x} \). In this case, we also have \( f(x) \equiv f(y) \) by \( \alpha \)-renaming, and so we can define
+	\[ \ap_{f}(\refl_{x}) \eql \refl_{f(x)} : f(x) = f(x).\vspace{-18pt} \] \qed\vspace{3pt}
+\end{proof} \end{thm}
+%-----------------------------------------------------------------------------------------------%
+\begin{thm}{Transport}{} Let \( X : \U \) and \( Y : X \to \U \), and \( x, y : X \). There is a term
+\[ \transport^{Y} : (x = y) \to (Y(x) \to Y(y)). \]
+We write \( p_{\ast} \eql \transport^{Y}(p) \) when \( Y \) is clear.
+\begin{proof}
+	By path induction, we may assume \( x \equiv y \) and \( p \equiv \refl_{x} \). In this case, we have \( Y(x) \equiv Y(y) \), so we can define
+	\[ \transport^{Y}(\refl_{x}) \eql \id_{Y(x)}.\vspace{-18pt} \] \qed\vspace{3pt}
+\end{proof} \end{thm}
+%-----------------------------------------------------------------------------------------------%
+\begin{thm}{Dependent path application}{} Let \( X : \U \), \( Y : X \to \U \), and \( f : \tpi{x : X} Y(x) \). There is a term
+\[ \apd_{f} : \tpi{x, y : X} \tpi{p : x = y} (\transport^{Y}(p, f(x)) = f(y)). \]
+We omit the specification of \( x \) and \( y \) since they are required for the definition of \( p \).
+\begin{proof}
+	It suffices by path induction to assume \( x \equiv y \) and \( p \equiv \refl_{x} \). In this case \( Y(x) \equiv Y(y) \), so we can define
+	\[ \apd_{f}(\refl_{x}) \eql {\refl_{f(x)}}.\vspace{-15pt} \] \qed\vspace{3pt}
+\end{proof} \end{thm}
+%-----------------------------------------------------------------------------------------------%
+\begin{corollary}{Dependent path application on path types}{}
+	Let \( X : \U \) and \( a : X \). Then for any \( x, y : X \) and \( p : x = y \), we have
+	\[ \begin{array}{rcll}
+		\transport^{z \mapsto (a = z)}(p, q) &=& (q \bullet p) : a = y & \text{ ~for } q : a = x, \\
+		\transport^{z \mapsto (z = a)}(p, r) &=& (p^{-1} \bullet r) : y = a & \text{ ~for } r : x = a, \\
+		\transport^{z \mapsto (z = z)}(p, s) &=& (p^{-1} \bullet s \bullet p) : y = y & \text{ ~for } s : x = x.
+	\end{array} \]
+\end{corollary}
+%-----------------------------------------------------------------------------------------------%
+This marks the end of our discussion of pure IML type theory. In the next section, we will discuss the history of type theory writ large, the additional axioms that homotopy type theory posits, and analyze some of the properties of path spaces of various types. These ideas are closely related, and we will see why shortly.
+%===============================================================================================%
+\section{Homotopy type theory}
+The very first \emph{theory of types} was given in Russell and Whitehead's \emph{Principia Mathematica}, first published in 1910. Its goal was to minimize the number of axioms required to perform mathematics, and to solve the paradoxes that arose in the set theory of the time, especially the one of Russell's own namesake. That theory presented a grammar for formulae that prevented the sort of unrestricted application that made those paradoxes occur. However, it is rather infamous, in that the symbolic logic they developed required several hundred pages to prove the proposition ``1 + 1 = 2'', that is, \( \succ(0) + \succ(0) = \succ(\succ(0)) \). 
+
+Another type theory, of more computational value, is Church's \emph{typed \( \lambda \)-calculus}: a variant of the untyped \( \lambda \)-calculus where functions are restricted to act on specific types, just like in \emph{Principia}. Several other systems have been based on typed \( \lambda \)-calculus, such as System T, System F, and the rest of the ``Lambda cube''.
+
+IML was designed on the principles of mathematical constructivism. It is \emph{intensional}, in that synonymy and equality are distinct concepts. One limitation of IML as compared to HoTT is that, when forming a type in IML, we may only reference its terms, and not paths or higher paths between those terms. HoTT allows us to do this with \emph{inductive types}; we will see that propositions and sets are examples of such types. This is where the name ``\emph{homotopy} type theory'' comes from.
+%-----------------------------------------------------------------------------------------------%
+\subsection{Homotopies of functions}
+The classical notion of \emph{homotopy} between two continuous functions \( f, g : X \to Y \), where \( X \) and \( Y \) are topological spaces, is a continuous map \( H : [0, 1] \to X \to Y \) with
+\[ H(0, x) = f(x); \hspace{50pt} H(1, x) = g(x). \]
+If instead of \( f, g \) we consider paths \( p, q : [0, 1] \to X \) between \( x \) and \( y \) in a space \( X \), we have the homotopy \( H : [0, 1] \times [0, 1] \to X \) such that
+\[ \begin{array}{ccc}
+	H(0, t) = p(t), &\hspace{50pt}& H(1, t) = q(t), \\
+	H(s, 0) = x, && H(s, 1) = y,
+\end{array} \]
+so that for each \( s \in [0, 1] \), the function \( H(s) : [0, 1] \to X \) is also a path between \( x \) and \( y \). For two paths to share a homotopy is an equivalence relation, with symmetry as the inversion of the homotopy and transitivity as concatenation.
+
+Let \( X, Y : \U \) and \( f, g : X \to Y \). A \defn{homotopy} between \( f \) and \( g \) is a function that assigns to each \( x : X \) a path between \( f(x) \) and \( g(x) \). That is,
+\[ f \sim g \eql \tpi{x : X} (f(x) = g(x)). \]
+Homotopies must be defined between independent functions, since the target terms \( f(x) \) and \( g(x) \) must have the same type in order to construct a path between them.
+
+Note that, in this light, a homotopy is not quite the same as a path \( f = g \); the only paths exist at the level of the functions' values. We will soon see how paths in the function type \( X \to Y \) arise.
+%-----------------------------------------------------------------------------------------------%
+\begin{lemma}{}{} Homotopy is an equivalence relation.
+\begin{proof}
+	Let \( X, Y : \U \) and \( f, g, h : X \to Y \).
+	
+	To show that \( \sim \) is reflexive, consider that \( f(x) \equiv f(x) \) for each \( x : X \). Thus we have
+	\[ \lambda(x : X).~~(\refl_{f(x)} : f(x) = f(x)) : f \sim f. \]
+	
+	To show that \( \sim \) is symmetric, consider a homotopy \( H : f \sim g \). Define \( J(x) \eql (H(x))^{-1} \) for each \( x : X \). Thus \( J : g \sim f \).
+	
+	To show that \( \sim \) is transitive, consider homotopies \( J : f \sim g \) and \( K : g \sim h \). Define \( L(x) \eql J(x) \bullet K(x) \) for each \( x : X \). Thus \( L : f \sim h \). \qed
+\end{proof} \end{lemma}
+%-----------------------------------------------------------------------------------------------%
+\begin{thm}{Naturality}{} Let \( X, Y : \U \), \( f, g : X \to Y \), and suppose \( x, y : X \) with \( p : x = y \). If \( H : f \sim g \), then
+\[ H(x) \bullet \ap_{g}(p) = \ap_{f}(p) \bullet H(y). \]
+\begin{proof}
+	By path induction, it suffices to assume \( x \equiv y \) and \( p \equiv \refl_{x} \). But in this case, we have
+	\[ \begin{array}{rcl}
+		H(x) \bullet \ap_{g}(p) &\equiv& H(x) \bullet \ap_{g}(\refl_{x}) \\
+		&\equiv& H(x) \bullet \refl_{g(x)} \\
+		&\equiv& H(x) \\
+		&\equiv& \refl_{f(x)} \bullet H(x) \\
+		&\equiv& \ap_{f}(\refl_{x}) \bullet H(x) \\
+		&\equiv& \ap_{f}(p) \cdot H(x).
+	\end{array}\vspace{-18pt} \] \qed\vspace{3pt}
+\end{proof} \end{thm}
+%-----------------------------------------------------------------------------------------------%
+\begin{corollary}{}{} If \( f : X \to X \) with \( H : f \sim \id_{X} \), then \( H \circ f \sim {\ap_{f}} \circ H \). That is, \( \tpi{x : X} H(f(x)) = \ap_{f}(H(x)) \).
+\end{corollary}
+%-----------------------------------------------------------------------------------------------%
+\subsection{Type equivalence}
+Given types \( X, Y : \U \) and a function \( f : X \to Y \), we say that \( f \) is an \defn{equivalence} between \( X \) and \( Y \) if there is a function \( g : Y \to X \) such that \( g \circ f \sim \id_{X} \) and a function \( h : Y \to X \) such that \( f \circ h \sim \id_{Y} \). That is,
+\[ \isEquiv(f) \eql (\tsigma{g : Y \to X} (g \circ f \sim \id_{X})) \times (\tsigma{h : Y \to X} (f \circ h \sim \id_{Y})). \]
+A curious property of this type, since it is defined using the unique identity function, is that for any two terms \( e_{1}, e_{2} : \isEquiv(f) \), we always have \( e_{1} = e_{2} \). For this reason, we write the terms of the type
+\[ X \simeq Y \eql \tsigma{f : X \to Y} \isEquiv(f) \]
+as simply the function, that is, \( f : X \simeq Y \).
+%-----------------------------------------------------------------------------------------------%
+\begin{example}{}{self-eq}
+	For any \( X \), the function \( \id_{X} : X \simeq X \), since we have a term
+	\[ ((\id_{X}, \lambda(x : X).~\refl_{x}), (\id_{X}, \lambda(x : X).~\refl_{x})) : 	\isEquiv(\id_{X}). \]
+\end{example}
+%-----------------------------------------------------------------------------------------------%
+We have a formulation that is simpler to use in practise, that uses only one ``backwards'' function, but is not guaranteed the same equality of terms as given by \( \isEquiv(f) \). This is the type of \defn{quasi-inverses} of \( f \), namely
+\[ \qinv(f) \eql \tsigma{g : Y \to X} (g \circ f \sim \id_{X}) \times (f \circ g \sim \id_{Y}). \]
+%-----------------------------------------------------------------------------------------------%
+\begin{lemma}{}{equiv-qinv} Let \( X, Y : \U \). Then for any \( f : X \to Y \), we have \( \isEquiv(f) \to \qinv(f) \) and \( \qinv(f) \to \isEquiv(f) \).
+\begin{proof}
+	Let \( f : X \to Y \) with \( (g, \alpha, \beta) : \qinv(f) \). Then \( ((g, \alpha), (g, \beta)) : \isEquiv(f) \). Also, if \( ((g, \alpha), (h, \beta)) : \isEquiv(f) \), then define \( \beta' : s \circ f \sim \id_{X} \) by
+	\[ \beta'(x) \eql \beta(g(f(x)))^{-1} \bullet \ap_{h}(\alpha(f(x))) \bullet \beta(x); \]
+	then \( (g, \alpha, \beta') : \qinv(f) \). \qed
+\end{proof} \end{lemma} \noindent
+%-----------------------------------------------------------------------------------------------%
+Since either can be obtained from the other, we can use quasi-inverses for their simplicity, but apply (\textbf{\color{MPBthm}\ref{lem:equiv-qinv}}) when we need an equivalence with equal terms in the second coordinate. See (\textbf{\color{MPBthm}\ref{thm:qinv-paths}}) for a discussion on why this matters.
+%-----------------------------------------------------------------------------------------------%
+\begin{thm}{}{} Type equivalence is an equivalence relation.
+\begin{proof}
+	We showed \( \simeq \) is reflexive in (\textbf{\color{MPBexample}\ref{ex:self-eq}}).
+	
+	To show \( \simeq \) is symmetric, let \( f : X \simeq Y \). We can take a quasi-inverse \( f^{-1} : Y \to X \), and \( f^{-1} \) has a quasi-inverse \( f \); apply (\textbf{\color{MPBthm}\ref{lem:equiv-qinv}}) to show that \( Y \simeq X \).
+	
+	To show \( \simeq \) is transitive, suppose \( f : X \simeq Y \) and \( g : Y \simeq Z \). We have \( f^{-1} : Y \simeq X \) and \( g^{-1} : Z \simeq Y \) as quasi-inverses, respectively. Observe that
+	\[ (g^{-1} \circ f^{-1} \circ f \circ g) \sim g^{-1} \circ g \sim \id_{Y}, \]
+	\[ (f^{-1} \circ g^{-1} \circ g \circ f) \sim f^{-1} \circ f \sim \id_{X}. \]
+	Thus \( f^{-1} \circ g^{-1} \) is a quasi-inverse for \( g \circ f : X \to Z \), and hence \( g \circ f : X \simeq Z \) by (\textbf{\color{MPBthm}\ref{lem:equiv-qinv}}). \qed
+\end{proof} \end{thm}
+%-----------------------------------------------------------------------------------------------%
+\begin{corollary}{}{} Let \( f : X \simeq Y \) and \( x, y : X \). Then \( \ap_{f} : (x = y) \simeq (f(x) = f(y)) \).
+
+Beware: the quasi-inverse is not simply \( \ap_{f^{-1}} \)! In fact, if \( (g, \alpha, \beta) : \qinv(f) \),
+\[ {(\ap_{f})^{-1}} \eql \lambda(q : f(x) = f(y)).~~(\beta(x)^{-1} \bullet \ap_{f^{-1}}(q) \bullet \beta(y)) : (f(x) = f(y)) \simeq (x = y). \]
+\end{corollary}
+%-----------------------------------------------------------------------------------------------%
+\subsection{Function extensionality}
+Everything up to this point has used only the rules of IML. We are about to define our first supplementary axiom. Let \( X, Y : \U \) and \( f, g : X \to Y \). Consider \( p : f = g \). We can use path induction on \( p \) and suppose that \( f \equiv g \), \( p \equiv \refl_{f} \) to define the function
+\[ \begin{array}{c}
+	\happly : (f = g) \to (f \sim g) \\[3pt]
+	\happly(\refl_{f}) \eql \lambda(x : X).~\refl_{f(x)}.
+\end{array} \]
+We really, really want \( (f = g) \simeq (f \sim g) \), but unfortunately, there is no quasi-inverse to \( \happly \) that can be defined using only the IML axioms. So, we define our own! Defining an axiom, in this case, is simply positing an atomic term of a type, namely
+\[ \funext : (f \sim g) \to (f = g), \numberthis \]
+which we define as the quasi-inverse to \( \happly \). This gives us the equivalence \( \happly : (f = g) \simeq (f \sim g) \) through an application of (\textbf{\color{MPBthm}\ref{lem:equiv-qinv}}).
+%-----------------------------------------------------------------------------------------------%
+\begin{thm}{}{} Let \( X, Y : \U \), \( f, g, h : X \to Y \), \( x : X \), and \( h : f = g \), \( j : g = h \). Then:
+\begin{enumerate}
+	\item \( \refl_{f} = \funext(\lambda(x : X).~\refl_{f(x)}) \);
+	\item \( h = \funext(\lambda(x : X).~\happly(h, x)) \);
+	\item \( h^{-1} = \funext(\lambda(x : X).~\happly(h, x)^{-1}) \);
+	\item \( h \bullet j = \funext(\lambda(x : X).~\happly(h, x) \bullet \happly(j, x)) \);
+	\item \( \happly(\funext(h), x) = h(x) \).
+\end{enumerate}
+Note that these are equalities, not synonymies. \end{thm}
+%-----------------------------------------------------------------------------------------------%
+In fact, the axiom of function extensionality is not strictly necessary in homotopy type theory; there is another axiom we will see from whence function extensionality follows, but the proof of entailment is outside the scope of this paper.
+%-----------------------------------------------------------------------------------------------%
+\subsection{Uniqueness principles}
+We now have the tools to prove the uniqueness principles for most of the type formers we have seen. Recall that these principles are supposed to describe what terms of the type look like when compared to the constituent information from the formation rules; we demonstrate this using equivalences.
+%-----------------------------------------------------------------------------------------------%
+\begin{thm}{Uniqueness principle for products}{prod-uniq} Let \( X, Y : \U \) and \( z, w : X \times Y \). Then
+\[ (z = w) \simeq (\pr_{1}(z) = \pr_{1}(w)) \times (\pr_{2}(z) = \pr_{2}(w)). \]
+\begin{proof}
+	For \( p : z = w \), the forward function is given by
+	\[ f(p) \eql (\ap_{\pr_{1}}(p), \ap_{\pr_{2}}(p)), \]
+	and for \( x : X \), \( y : Y \), the backward function is defined using the induction principles for products and paths:
+	\[ g(\refl_{x}, \refl_{y}) \eql {\refl_{(x, y)}}. \]
+	It suffices to show that they are quasi-inverses. But for \( p_{i} : \pr_{i}(z) = \pr_{i}(w) \), \( x : X \), and \( y : Y \), we have
+	\[ \begin{array}{rcl}
+		(g \circ f)(p_{1}, p_{2}) &\eql& (p_{1}, p_{2}), \\
+		(f \circ g)(\refl_{x}, \refl_{y}) &\eql& (\refl_{x}, \refl_{y}).
+	\end{array} \]
+	These outputs are synonymous with the inputs, and hence equal. Thus \( g \circ f \sim \id_{z = w} \) and \( f \circ g \sim \id_{(\pr_{1}(z) = \pr_{1}(w)) \times (\pr_{2}(z) = \pr_{2}(w))} \), so by applying (\textbf{\color{MPBthm}\ref{lem:equiv-qinv}}), we have an equivalence. \qed
+\end{proof} \end{thm}
+%-----------------------------------------------------------------------------------------------%
+\begin{thm}{Uniqueness principle for the unit type}{unit-uniq} For any \( x : \1 \), we have \( x = \star \). Also, for any \( x, y : \1 \), we have \( x = y \simeq \1 \). Thus, in the unit type, every term is uniquely equal to \( \star \).
+\begin{proof} Path induction on the type family \( \lambda(x : \1).~ (x = \star) \). \qed \end{proof} \end{thm}
+%-----------------------------------------------------------------------------------------------%
+\begin{thm}{Uniqueness for \( \Sigma \)-types}{sigma-uniq} Let \( X : \U \) and \( Y : X \to \U \), and \( z, w : \tsigma{x : X} Y(x) \). Then
+\[ z = w \simeq \tsigma{p : (\pr_{1}(z) = \pr_{1}(w))} p_{\ast}(\pr_{2}(z)) = \pr_{2}(w). \]
+\end{thm}
+%-----------------------------------------------------------------------------------------------%
+\begin{thm}{Uniqueness for coproducts}{coprod-uniq} Let \( X, Y : \U \) and \( x, a : X \), \( y, b : Y \). Then \( \inl(x) = \inl(a) \simeq x = a \) and \( \inr(y) = \inr(b) \simeq y = b \), and also \( \inl(x) = \inr(y) \simeq \0 \). \end{thm}
+%-----------------------------------------------------------------------------------------------%
+\begin{thm}{Uniqueness of naturals}{N-uniq} We have, for \( m, n : \N \), the following:
+\begin{itemize}
+	\item \( 0 = 0 \simeq \1 \),
+	\item \( \succ(m) = 0 \simeq \0 \) and \( 0 = \succ(n) \simeq \0 \),
+	\item \( \succ(m) = \succ(n) \simeq m = n \).
+\end{itemize}
+ \end{thm}
+%-----------------------------------------------------------------------------------------------%
+\subsection{Univalence}
+We have reached the second axiom that homotopy type theory posits on top of IML. This is the axiom of \defn{univalence}, that deals with applying path types to universes. We can already say that
+\[ \eqtoequiv : (X = Y) \to (X \simeq Y) \]
+for any types \( X, Y : \U \), by path induction and (\textbf{\color{MPBexample}\ref{ex:self-eq}}):
+\[ \eqtoequiv(\refl_{X}) \eql \id_{X}. \]
+Wouldn't it be great if types that were equivalent were also equal? This is precisely what the univalence axiom states, defined as the quasi-inverse to the above:
+\[ \ua : (X \simeq Y) \to (X = Y). \numberthis \]
+It can be shown that our axiom of function extensionality follows from the univalence axiom.
+%-----------------------------------------------------------------------------------------------%
+\begin{thm}{}{} Let \( X, Y, Z : \U \) and \( f : X \simeq Y \), \( g : Y \simeq Z \). Then
+\begin{enumerate}
+	\item \( \refl_{X} = \ua(\id_{X}) \);
+	\item \( \ua(f)^{-1} = \ua(f^{-1}) \);
+	\item \( \ua(f) \bullet \ua(g) = \ua(g \circ f) \).
+\end{enumerate} \end{thm}
+%-----------------------------------------------------------------------------------------------%
+\begin{thm}{Univalence and transport}{} Let \( X : \U \), \( Y : X \to \U \), \( x, y : X \), and \( p : x = y \). Then \( \ua(p_{\ast}) =_{Y(x) = Y(y)} \ap_{Y}(p). \) \end{thm}
+%===============================================================================================%
+\section{Sets and Propositions}
+So far, we have seen ways of making old types from new, and familiar constructions that can be formulated as types, like the natural numbers and Booleans. Now we will discuss the \emph{propositions-as-types interpretation} of HoTT, and from this perspective develop a constructive theory of sets.
+%-----------------------------------------------------------------------------------------------%
+\subsection{Propositions-as-types}
+A \emph{proposition} is a statement about certain mathematical objects. For example, the statement ``4 is a multiple of 2'' is a proposition. A key fact about propositions is that they are subject to proof or disproof: in the case above, it suffices to demonstrate that 4 is the product of 2 and 2, since this is sufficient for it to be a multiple of 2. However, 1 cannot be written as a product of 2 and an integer, and so it is not a multiple of 2, which constitutes a disproof of the proposition ``1 is a multiple of 2''.
+
+In type theory, the objects that are subject to proof are \emph{types}. Their proofs are exactly the terms of those types, since we have seen cases where types may not have terms (namely, the empty type). However, classically, we do not much care for the precise proof of a proposition, so long as the statement holds; for example, there are hundreds of proofs of the Pythagorean theorem, but all are equally valid at demonstrating its truth.
+
+We define the \defn{truncation} of a type \( X : \U \) as the type \( \norm[X] : \U \), along with the constructors
+\[ \abs : X \to \norm[X], \hspace{50pt} \witness : \tpi{x, y : \norm[X]} (x = y). \]
+The type \( \norm[X] \) is truncated in that every term of \( X \) infers a term \( \abs[x] : \norm[X] \), but we can treat any \( \abs[x] \) equally as any other term of \( \norm[X] \). Thus, the only information \( \norm[X] \) contains is whether or not the type \( X \) is inhabited. More generally, we say that a type \( X : \U \) is a \defn{proposition} if the type
+\[ \isProp(X) \eql \tpi{x, y : X} (x = y) \]
+is inhabited. Indeed, if \( X \) is any type, then its truncation \( \norm[X] \) is a proposition by virtue of \( \witness \). The induction principle for truncation is given by
+\[ \begin{array}{c}
+	\ind_{\norm} : \tpi{C : \norm[X] \to \tsigma{Y : \U} \isProp(Y)} (\tpi{x : X} C(\abs[x])) \to \tpi{y : \norm[X]} C(y) \\[3pt]
+	\ind_{\norm}(C, f, \abs[x]) \eql f(x).
+\end{array} \]
+Note the codomain of the type family: we cannot extract more information out of a proposition than inhabitedness, so the result type must also be a proposition. We write
+\[ {\Prop} \eql \tsigma{Y : \U} \isProp(Y). \]
+
+We use truncation to hide the ``extra information'' in certain cases: for example, in the case of coproducts, we have additional information about which constructor was used to create the particular term of \( P + Q \), unless we truncate to get rid of it. Also, in the dependent pair case, we have access to the first projection, and hence which particular \( x \) such that \( Q(x) \), unless we truncate to obfuscate it.
+%-----------------------------------------------------------------------------------------------%
+We can now compare the traditional logical notation with our type-theoretic notation. For types \( P, Q \), we have the following analogies for propositional logic:
+\[ \begin{array}{ccc}
+	\text{Traditional} && \text{HoTT} \\ \hline \\[-9pt]
+	\neg P && P \to \0 \\
+	P \wedge Q && P \times Q \\
+	P \vee Q && \norm[P + Q] \\
+	P \Rightarrow Q && P \to Q \\
+	P \Leftrightarrow Q && P \simeq Q \\
+	\forall (x \in P) : Q(x) && \tpi{x : P} Q(x) \\
+	\exists (x \in P) : Q(x) && \norm[\tsigma{x : P} Q(x)]
+\end{array} \]
+For familiar negations, such as disequality, we may write \( x \neq y \) to mean that \( \neg(x = y) \).
+%-----------------------------------------------------------------------------------------------%
+\begin{example}{Not all types are propositions}{} \\[3pt]
+	Consider the natural numbers, \( \N \). The uniqueness principle states that \( 0 = 0 \), but that for any \( n : \N \), we have \( 0 \neq \succ(n) \). In particular, \( 0 \neq \succ(0) \), so \( \N \) is not a proposition.
+\end{example}
+%-----------------------------------------------------------------------------------------------%
+\subsection{Sets}
+A \defn{set} in HoTT is a type that has propositional equality. That is, for \( X : \U \) and \( x, y : X \), we want
+\[ \isSet(X) \eql \tpi{x, y : X} \isProp(x = y) \,\equiv\, \tpi{x, y : X} \tpi{p, q : x = y} (p = q). \]
+In this case, we treat all proofs of the equality of \( x \) and \( y \) as equal to one another, so that we may use them interchangeably.
+
+Just like any type \( X \) can be made into a proposition through \( \norm[X] \), there is a way to extract only the terms and 1-paths of \( X \), so that any information about higher paths is lost. We call this type former \defn{set-truncation} and write \( \norm[X]_{0} \); it looks quite similar to regular truncation, but with the constructors
+\[ \abs_{0} : X \to \norm[X]_{0}, \hspace{50pt} \witness_{0} : \tpi{x, y : \norm[X]_{0}} \tpi{p, q : x = y} (p = q). \]
+
+Notice the similarity of the definitions of sets and propositions. It is common to call sets \defn{\( 0 \)-types}, and propositions \defn{(\( -1 \))-types}. One would expect a \defn{\( 1 \)-type} to have the property
+\[ \isntype[1](X) \eql \tpi{x, y : X} \tpi{p, q : x = y} \tpi{\alpha, \beta : p = q} (\alpha = \beta); \]
+a recursive definition, for \( n : \N \), would be
+\[ \isntype[\succ(n)](X) \eql \tpi{x, y : X} \isntype[n](x = y). \]
+In general, \( n \)-types are also \( \succ(n) \)-types; we show the base case below.
+%-----------------------------------------------------------------------------------------------%
+\begin{thm}{Propositions are sets}{prop-set} Let \( X : \U \) with \( f : \isProp(X) \). Then there is a term of \( \isSet(X) \).
+\begin{proof}
+	For any \( x, y : X \) we have \( f(x, y) : x = y \). Fix \( x : X \) and define \( g(y) \eql f(x, y) \). Then if \( y, z : X \) with \( p : y = z \), we have \( \apd_{g}(p) : p_{\ast}(g(y)) = g(z) \), which because we are working in the path type gives \( g(y) \bullet p = g(z) \), or \( p = g(y)^{-1} \bullet g(z) \). Thus, for any \( x, y : X \) and \( p, q : x = y \), we have \( p = g(x)^{-1} \bullet g(y) = q \). \qed
+\end{proof} \end{thm}
+%-----------------------------------------------------------------------------------------------%
+\begin{thm}{Propositionality is a proposition}{prop-prop} Let \( X : \U \). Then \( \isProp(\isProp(X)) \).
+\begin{proof}
+	Suppose \( f, g : \isProp(X) \). We want \( f = g \), but by function extensionality, it suffices to show \( \tpi{x, y : X} f(x, y) = g(x, y) \). But both sides of the equality are paths in \( X \), which are equal since \( X \) is a set by (\textbf{\color{MPBthm}\ref{thm:prop-set}}) and one of \( f, g : \isProp(X) \). \qed
+\end{proof} \end{thm}
+%-----------------------------------------------------------------------------------------------%
+Because of (\textbf{\color{MPBthm}\ref{thm:prop-set}}) and (\textbf{\color{MPBthm}\ref{thm:prop-prop}}), we can use the shorthand ``let \( X : \Prop \)'' to mean ``let \( X : \U \) such that \( \isProp(X) \)'', since any two terms of the latter can be considered equal. Also, by a similar argument to (\textbf{\color{MPBthm}\ref{thm:prop-prop}}), to be a set is a proposition, and so we can write ``let \( X : \Set \)'' to mean ``let \( X : \U \) with \( \isSet(X) \)''.
+%-----------------------------------------------------------------------------------------------%
+\begin{thm}{}{univ-not-set} Universes are not sets; that is, their path types are not necessarily propositions.
+\begin{proof}
+	It suffices to exhibit a type \( X : \U \) such that \( X = X \) is not a proposition. For this we use the type of Booleans, \( \2 : \U \). Note that there is a function
+	\[ \begin{array}{rcl}
+		\multicolumn{3}{c}{\noot : \2 \to \2} \\[3pt]
+		\noot(0_{\2}) &\eql& 1_{\2} \\
+		\noot(1_{\2}) &\eql& 0_{\2},
+	\end{array} \]
+	which is an equivalence, since it is its own quasi-inverse, \emph{i.e.} \( \noot \circ \noot \sim \id_{\2} \). However, note that (by function extensionality) \( \noot \neq \id_{\2} \), so we have two unequal terms of \( \2 \simeq \2 \). By univalence, each gives rise to a path in \( \2 = \2 \), so we must have \( \ua(\noot) \neq \ua(\id_{\2}) \). Hence \( \2 = \2 \) is not a proposition. \qed
+\end{proof} \end{thm}
+%-----------------------------------------------------------------------------------------------%
+\begin{thm}{}{qinv-paths} Let \( X, Y : \U \) and suppose \( f : X \to Y \) such that \( \qinv(f) \) is inhabited. Then
+\[ \qinv(f) \simeq \tpi{x : X} (x = x). \]
+\begin{proof}
+	By (\textbf{\color{MPBthm}\ref{lem:equiv-qinv}}), we know that \( f \) is an equivalence, so we have \( e : \isEquiv(f) \) and \( (f, e) : X \simeq Y \). By univalence, we may assume that \( f(e) \) is of the form \( \eqtoequiv(p) \) for some \( p : X = Y \). By path induction, it suffices to consider the case where \( X \equiv Y \) and \( p \equiv \refl_{X} \), in which case \( f \) is \( \id_{X} \). Thus it suffices to show \( \qinv(\id_{X}) \simeq \tpi{x : X} (x = x) \).
+	We have
+	\[ \qinv(\id_{X}) \equiv \tsigma{g : X \to X} (g \sim \id_{X}) \times (g \sim \id_{X}), \]
+	which by function extensionality is equivalent to
+	\[ \tsigma{g : X \to X} (g = \id_{X}) \times (g = \id_{X}). \]
+	It is not difficult, but  here, to show that this is equivalent to
+	\[ \tsigma{h : \tsigma{g : X \to X} (g = \id_{X})} (\pr_{1}(h) = \id_{X}). \]
+	But since \( \id_{X} \) is unique, the type \( \tsigma{g : X \to X} (g = \id_{X}) \) is a proposition, with a canonical inhabitant \( (\id_{X}, \refl_{\id_{X}}) \). Thus the above type is equivalent to \( \id_{X} = \id_{X} \), which by function extensionality is equivalent to \( \tpi{x : X} (x = x) \) as required. \qed
+\end{proof} \end{thm}
+%-----------------------------------------------------------------------------------------------%
+The above theorem tells us that when \( X \) is not a set, for any \( f : X \to Y \) we are not guaranteed that \( \qinv(f) \) is a proposition. However, we can obtain a proposition by splitting the quasi-inverse into left- and right-inverses, like we did in the type \( \isEquiv(f) \), because then the pre- and post-compositions with \( f \) must be homotopic to the identity functions on \( X \) and \( Y \) respectively, which are unique.
+%-----------------------------------------------------------------------------------------------%
+\subsection{The axiom of choice}
+Perhaps the best example to explain the effects of truncation is the type-theoretic analogue of the \defn{axiom of choice} (\( \AC \)). In classical set theory, \( \AC \) would be stated as follows:
+\begin{center}
+	if for all \( x \in X \) there is some \( y \in Y \) such that \( R(x, y) \), \\
+	there is a function \( f : X \to Y \) such that for all \( x \in X \) we have \( R(x, f(x)) \).
+\end{center}
+We have two different interpretations of this statement in type theory: the first, for types \( X, Y : \U \) and a relation \( R : X \to Y \to \U \), states that
+\[ \operatorname{ac}_{\infty} : \left(\tpi{x : X} \tsigma{y : Y} R(x, y)\right) \to \left(\tsigma{f : X \to Y} \tpi{x : X} R(x, f(x))\right), \]
+which is actually provable, since we can define for \( g : \tpi{x : X} \tsigma{y : Y} R(x, y) \) the term
+\[ \operatorname{ac}_{\infty}(g) \eql (\lambda(x : X).~\pr_{1}(g(x)), \lambda(x : X).~\pr_{2}(g(x))) : \tsigma{f : X \to Y} \tpi{x : X} R(x, \pr_{1}(g(x))). \]
+Since we can prove this, it is not an axiom. What is usually meant by ``axiom of choice'' is the \emph{choice of a specific element from an otherwise inscrutable set}, whereas in the above we have all of the information about the terms \( y : Y \) for which \( R(x, y) \). To capture this effectively, we need truncation to hide the constructive information. In this case, we let \( X : \Set \) and \( A : X \to \Set \), and \( P : \tpi{x : X} A(x) \to \Prop \). Then
+\[ {\AC} \eql \left(\tpi{x : X} \norm[\tsigma{a : A(x)} P(x, a)]\right) \to \norm[\tsigma{g : \tpi{x : X} A(x)} \tpi{x : X} P(x, g(x))]. \]
+It can also be stated, for \( X : \Set \) and \( Y : X \to \Set \), as ``the cartesian product of nonempty sets is nonempty'':
+\[ {\AC} \eql \left(\tpi{x : X} \norm[Y(x)]\right) \to \norm[\tpi{x : X} Y(x)]; \]
+In fact, \( \AC \) is an equivalence itself, due to the fact that both sides are propositions and that the RHS always entails the LHS. To see that both formulations of \( \AC \) are equivalent, set
+\[ Y(x) \eql \tsigma{a : A(x)} P(x, a), \]
+and apply the following lemma.
+%-----------------------------------------------------------------------------------------------%
+\begin{lemma}{Inward universal property of pair type families}{} Let \( X : \U \), \( A : X \to \U \), and \( P : \tpi{x : X} A(x) \to \U \). Then
+\[ (\tpi{x : X} \tsigma{a : A(x)} P(x, a)) \simeq (\tsigma{g : \tpi{x : X} A(x)} \tpi{x : X} P(x, g(x))). \]
+\begin{proof}
+	The forward function is given by sending \( f : \tpi{x : X} \tsigma{a : A(x)} P(x, a) \) to
+	\[ ({\pr_{1}} \circ f, {\pr_{2}} \circ f) : \tsigma{g : \tpi{x : X} A(x)} \tpi{x : X} P(x, g(x)). \]
+	We want to show that \( \lambda((g, h)).~ \big(\lambda(x : X).~ (g(x), h(x)) \big) \) is a quasi-inverse to the above.
+	The round-trip composite acting on \( f : \tpi{x : X} \tsigma{a : A(x)} P(x, a) \) yields the function
+	\[ \lambda(x : X).~ (\pr_{1}(f(x)), \pr_{2}(f(x))), \]
+	which for each \( x : X \) gives
+	\[ (\pr_{1}(f(x)), \pr_{2}(f(x))) \;=\; f(x) \]
+	by uniqueness in dependent pair types. Function extensionality then grants
+	\[ \lambda(x : X).~ (\pr_{1}(f(x)), \pr_{2}(f(x))) = f. \]
+	
+	Now, given \( (g, h) : \tsigma{g : \tpi{x : X} A(x)} \tpi{x : X} P(x, g(x)) \), the round-trip composite in the other direction yields \( (\lambda(x : X).~g(x), \lambda(x : X).~h(x)) \), which is synonymous to \( (g, h) \) by uniqueness in function types. \qed
+\end{proof} \noindent
+The simpler statement for independent pairs, for \( X : \U \) and \( Y, Z : X \to \U \), is precisely
+\[ (\tpi{x : X} Y(x) \times Z(x)) \simeq (\tpi{x : X} Y(x)) \times (\tpi{x : X} Z(x)). \]
+\end{lemma}
+%-----------------------------------------------------------------------------------------------%
+\begin{example}{Outward universal property for pair types}{}~\\[3pt]
+	Also called the \defn{Curry-Howard equivalence}, for types \( X, Y, Z : \U \) it is given by
+	\[ (X \times Y) \to Z \;\simeq\; X \to (Y \to Z), \]
+	whereas for \( X, Y : \U \) and \( Z : X \times Y \to \U \), we have
+	\[ \tpi{w : X \times Y} Z(w) \;\simeq\; \tpi{x : X} \tpi{y : Y} Z((x, y)). \]
+	Note that the reverse function is exactly the induction principle for products. This is also known to category theorists as (a special case of) the \emph{tensor-hom adjunction}.
+\end{example}
+%-----------------------------------------------------------------------------------------------%
+The axiom of choice (for sets) implies the \defn{law of excluded middle} (for propositions):
+\[ {\LEM} \eql \tpi{P : \Prop} P + \neg P. \]
+Thus, assuming \( \AC \) for the universe \( \U_{i} \) has the consequence that the type
+\[ (\tsigma{X : \U_{i}} \isProp(X)) \simeq \2; \]
+this is due to the fact that \( P \simeq \1 \) if \( P \) is an inhabited proposition, and \( P \simeq \0 \) otherwise, and so \( P + \neg P \) is always uniquely inhabited. The equivalence sends all propositions \( P \) for which \( \LEM(P) \) is an \( \inl \) to \( 1_{\2} \), and those that are \( \inr \)'s to \( 0_{\2} \). Also, if a proposition is \emph{not uninhabited}, then it must be the case that it is inhabited, so \( \LEM \) is equivalent to the \defn{law of double negation}.
+
+Recall that a proposition \( P \) is \defn{decidable} if we have \( P + \neg P \). Assuming the axiom of choice, then, grants that \textbf{all propositions are decidable} at the particular universe level. This is a very strong assumption, but not entirely unexpected, given the hesitation towards its acceptance even in classical mathematics.
+%-----------------------------------------------------------------------------------------------%
+\subsection{Propositional resizing and subsets}
+\begin{lemma}{Propositional subsumption}{} There is a map
+\[ (\tsigma{X : \U_{i}} \isProp(X)) \to (\tsigma{X : \U_{i + 1}} \isProp(X)). \]
+\begin{proof}[Proof (Russell)]
+	Immediate from \textsc{univ-subsume}. \qed
+\end{proof} \begin{proof}[Proof (Tarski)]
+	Let \( X : \U_{i} \) with \( \isProp(X) \). Then \( \lift_{i + 1}(X) : \U_{i + 1} \). Also, for any \( x, y : T_{i}(X) \), we have \( x =_{X} y : \U_{i} \), and so \( \lift_{i + 1}(x =_{X} y) : \U_{i + 1} \). But \( \witness(x, y) : T_{i}(x =_{X} y) \) for every \( x, y : X \). Thus we must have a term with type \( T_{i + 1}(\lift_{i + 1}(x =_{X} y)) \) induced by \( \witness(x, y) \). \qed
+\end{proof} \end{lemma}%-----------------------------------------------------------------------------------------------%
+Another axiom that we may choose to accept is the axiom of \defn{propositional resizing}: that there is a quasi-inverse to the map defined in the above lemma. Upon accepting this axiom, propositions at every universe level are equivalent to some proposition in the base universe \( \U_{0} \). We can then define
+\[ \PropO \eql \tsigma{P : \U_{0}} \isProp(P), \]
+and for any \( X : \U_{i} \) we can define maps \( X \to \PropO \) by composing any map \( X \to \tsigma{P : \U_{i}} \isProp(P) \) with the maps given by propositional resizing.
+
+Indeed, when \( X : \Set \), we can define the \defn{powerset} \( \P(X) \eql X \to \PropO \). Terms \( \gamma : \P(X) \) are called \defn{subsets} of the set \( X \), and there is a \defn{membership predicate}, defined as the adjoint to evaluation:
+\[ \begin{array}{c}
+	{\in} : X \to \P(X) \to \PropO \\[3pt]
+	x \in \gamma \eql \gamma(x).
+\end{array} \]
+Since \( \gamma \) is a proposition family, we write \( x \in \gamma \) when \( \gamma(x) \simeq \1 \) and \( x \notin \gamma \) when \( \gamma(x) \simeq \0 \). We say that \( \gamma \) is a \defn{decidable subset} if \( (x \in \gamma) + (x \notin \gamma) \).
+
+We also have the familiar subset operations. Given \( X : \Set \) and \( \gamma, \varphi : \P(X) \), we use the traditional logical notation to define
+\[ \begin{array}{rcl}
+	\multicolumn{3}{c}{\makebox[0pt]{\( \cup, \cap, {\setminus} : \P(X) \to \P(X) \to \P(X) \)}} \\[3pt]
+	\gamma \cup \varphi &\eql& \lambda(x : X).~ \gamma(x) \vee \varphi(x), \\
+	\gamma \cap \varphi &\eql& \lambda(x : X).~ \gamma(x) \wedge \varphi(x), \\
+	\gamma \setminus \varphi &\eql& \lambda(x : X).~ \gamma(x) \wedge \neg\varphi(x).
+\end{array} \]
+The \defn{complement} of a subset is given by
+\[ \begin{array}{c}
+	\dash^{\complement} : \P(X) \to \P(X) \\[3pt]
+	\gamma^{\complement} \eql \lambda(x : X).~ \neg\gamma(x).
+\end{array} \]
+We also have the \defn{inclusion} operator,
+\[ \begin{array}{c}
+	{\subseteq} : \P(X) \to \P(X) \to \PropO \\[3pt]
+	\gamma \subseteq \varphi \eql \tpi{x : X} (\gamma(x) \to \varphi(x)).
+\end{array} \]
+Each \( \gamma(x) \to \varphi(x) \) is a proposition: if a map exists, it is unique, since its codomain is a proposition. Thus the whole \( \Pi \)-type is a proposition. We could have used the traditional notation, in which case
+\[ \gamma \subseteq \varphi \eql \forall(x : X).~(x \in \gamma) \Rightarrow (x \in \varphi). \]
+%-----------------------------------------------------------------------------------------------%
+\subsection{Contrast with ZF sets}
+Although there is a notion of membership in HoTT, it is not the same as the one present in ZF. In HoTT, membership occurs within a specified type, and terms are members only of subsets of that type, since the notion of a term not belonging to a type is nonsensical. However in ZF, there is a global membership predicate, and sets can be constructed without first defining a set in which they are contained.
+
+ZF set theory also posits the \defn{axiom of extensionality}:
+\[ \forall \gamma, \varphi:\; (\gamma \subseteq \varphi \wedge \varphi \subseteq \gamma) \Rightarrow (\gamma = \varphi). \]
+But its analogue in HoTT is actually provable: two subsets are equal if each contains the other.
+%-----------------------------------------------------------------------------------------------%
+\begin{thm}{Set extensionality}{set-ext} Let \( X : \Set \) and \( \gamma, \varphi : \P(X) \). Then
+\[ (\gamma \subseteq \varphi \wedge \varphi \subseteq \gamma) \Rightarrow (\gamma = \varphi). \]
+\begin{proof}
+	We want to show
+	\[ \tpi{x : X} (\gamma(x) \to \varphi(x)) \times (\varphi(x) \to \gamma(x)) \to (\gamma(x) = \varphi(x)). \]
+	Fix \( x : X \). The types \( \gamma(x), \varphi(x) \) are propositions, so the two functions in the pair must be each other's quasi-inverse.
+\hfill \emph{\color{MPBthm}(continued)}	\end{proof}
+\begin{proof}[Proof (continued)]
+	Hence the domain becomes
+	\[ \gamma(x) \Leftrightarrow \varphi(x) \;\equiv\; \gamma(x) \simeq \varphi(x), \]
+	but now the desired function
+	\[ (\gamma(x) \simeq \varphi(x)) \to (\gamma(x) = \varphi(x)) \]
+	is simply the univalence axiom. \qed
+\end{proof} \end{thm} \noindent
+%-----------------------------------------------------------------------------------------------%
+In fact, (\textbf{\color{MPBthm}\ref{thm:set-ext}}) is an equivalence, with the reverse function given by \( \eqtoequiv \) and the universal property.
+%===============================================================================================%
+\subsection{Algebraic structures}
+Traditionally, the description of an algebraic structure takes place over a set, so that there are no higher coherence paths to keep track of; we will stick with this characterization. We will present the notion of a semigroup and a monoid in the language of HoTT.
+
+We can also create a structure on a general type through set-truncation in order to use subsets. These are useful because being a member of a subset is a proposition, which grants the propositionality of many other properties.
+%-----------------------------------------------------------------------------------------------%
+\subsubsection{Semigroups}
+A \defn{semigroup structure} on a type \( X : \Set \) is a subset \( M : \P(X) \) and an operation \( \diamond : X \to X \to X \), such that
+\[ \closed_{M}(\diamond) \eql \tpi{x, y : X} M(x) \times M(y) \to M(x \diamond y); \]
+or in traditional logical notation,
+\[ \forall (x, y \in M).~ x \diamond y \in M; \]
+and such that
+\[ \assoc_{M}(\diamond) \eql \forall(x, y, z \in M).~ x \diamond (y \diamond z) =_{X} (x \diamond y) \diamond z. \]
+%-----------------------------------------------------------------------------------------------%
+\begin{lemma}{}{} Closedness and associativity are propositions, since \( M \) is a family of propositions and paths in sets are propositions. \end{lemma}
+%-----------------------------------------------------------------------------------------------%
+Since these properties are propositions, we may omit the naming of a specific term so long as we have given a proof of its existence, or assumed it. For this reason, we can say ``let \( (M, \diamond) \) be a semigroup on \( X \)'' to mean
+\[ \text{``let \( X : \Set \) and \( M : \P(X) \) and \( \diamond : X \to X \to X \) with \( \closed_{M}(\diamond) \) and \( \assoc_{M}(\diamond) \)''}, \]
+or write \( \Semigroup_{X}(M, \diamond) \) to denote the conjunction of the witnesses for the required properties.
+%-----------------------------------------------------------------------------------------------%
+\begin{thm}{Subsemigroup test}{sg-test} Let \( (M, \diamond) \) be a semigroup on \( X : \Set \). If there is a subset \( L : \P(X) \) with \( L \subseteq M \) such that \( \closed_{L}(\diamond) \), then \( (L, \diamond) \) is a semigroup on \( X \).
+\begin{proof}
+	Recall \( \closed_{L}(\diamond) \eql \forall(x, y \in L).~ x \diamond y \in L \). But this suffices for \( \assoc_{L}(\diamond) \), since \( L \subseteq M \) permits us to use the path given by \( \assoc_{M}(\diamond) \). \qed
+\end{proof} \end{thm}
+%-----------------------------------------------------------------------------------------------%
+\subsubsection{Monoids}
+A \defn{monoid structure} is a semigroup structure with a neutral term for the binary operation. That is, any semigroup \( (M, \diamond) \) on \( X : \Set \) can be turned into a monoid by supposing some \( e : X \) with \( e \in M \) and
+\[ \neutral_{\diamond}(e) \eql \forall(x : X).~ (e \diamond x =_{X} x) \wedge (x \diamond e =_{X} x). \]
+Since paths in sets are propositions, clearly \( \neutral_{\diamond}(e) \) is a proposition. Monoid structures on sets \( X \) are hence written \( \Monoid_{X}(M, \diamond, e) \).
+%-----------------------------------------------------------------------------------------------%
+\begin{lemma}{}{} Monoid units are unique.
+\begin{proof}
+	Let \( X : \Set \) permit a semigroup structure \( (M, \diamond) \) and suppose \( e_{1}, e_{2} : X \) with \( e_{1}, e_{2} \in M \) and \( \neutral_{\diamond}(e_{1}) \), \( \neutral_{\diamond}(e_{2}) \). Then the first projection of \( \neutral_{\diamond}(e_{1}, e_{2}) \) is of type \( e_{1} \diamond e_{2} = e_{2} \), and the second projection of \( \neutral_{\diamond}(e_{2}, e_{1}) \) has type \( e_{1} \diamond e_{2} = e_{1} \). Concatenating  the inverse of the latter with the former gives a term of \( e_{1} = e_{2} \). \qed
+\end{proof} \end{lemma}
+%-----------------------------------------------------------------------------------------------%
+\begin{thm}{Submonoid test}{mon-test} Let \( (M, \diamond, e) \) be a monoid structure on \( X : \Set \). If there is a subset \( L \subseteq M \) with \( \closed_{L}(\diamond) \) and \( e \in L \), then \( (L, \diamond, e) \) is a monoid structure on \( X \). \end{thm}
+%-----------------------------------------------------------------------------------------------%
+\subsubsection{Orders and lattices}
+Let \( X : \Set \). A \defn{partial order} on a subset \( M : \P(X) \) is a binary proposition family \( {\leq_{M}} : X \to X \to \Prop \) that is reflexive, antisymmetric, and transitive:
+\[ \forall(x, y, z \in M).~ (x \leq_{M} x) \wedge (x \leq_{M} y \wedge y \leq_{M} x \Rightarrow x =_{X} y) \wedge (x \leq_{M} y \wedge y \leq_{M} z \Rightarrow x \leq_{M} z). \]
+Note that every member of \( M \) generates two subsets of \( X \) through partial application of the partial order; that is, for \( x : X \) with \( x \in M \),
+\[ \lteq_{M}(x) \eql (\dash \leq_{M} x) : \P(X), \hspace{33pt} \gteq_{M}(x) \eql (x \leq_{M} \dash) : \P(X). \]
+Note that \( \lteq_{M}(x), \gteq_{M}(x) \subseteq M \). Those well-versed in lattice theory would recognize these as the \defn{principal ideals} and, dually, the \defn{principal filters} of the partial order.
+
+Given a partial order structure \( (M, \leq_{M}) \) on a set \( X \) and a subset \( L \subseteq M \), a \defn{lower bound} of \( L \) is a term \( \ell \in M \) satisfying
+\[ \lbd_{L}(\ell) \eql \forall(x \in L).~ (\ell \leq_{M} x), \]
+and an \defn{upper bound} for \( L \) is a term \( u \in M \) satisfying
+\[ \ubd_{L}(u) \eql \forall(x \in L).~ (x \leq_{M} u). \]
+Indeed, \( \lbd_{L}, \ubd_{L} : \P(X) \) and \( \lbd_{L}, \ubd_{L} \subseteq M \).
+The \defn{infimum} (\defn{supremum}) of \( L \) is the upper bound of all lower bounds (lower bound of all upper bounds). That is,
+\[ \begin{array}{c}
+	\inf_{L}(\ell) \eql \lbd_{L}(\ell) \wedge \ubd_{\lbd_{L}}(\ell), \\[3pt]
+	\sup_{L}(u) \eql \ubd_{L}(u) \wedge \lbd_{\ubd_{L}}(u).
+\end{array} \]
+%-----------------------------------------------------------------------------------------------%
+\begin{lemma}{}{} Infima and suprema are unique.
+\begin{proof}
+	Let \( X : \Set \) admit a partial order structure \( (M, \leq_{M}) \), and let \( L \subseteq M \). Suppose \( j, k \in \inf_{L} \). Note that \( \ubd_{\lbd_{L}}(j, k) : (k \leq_{M} j) \) and \( \ubd_{\lbd_{L}}(k, j) : (j \leq_{M} k) \). Applying antisymmetry yields the result. The proof is similar for suprema. \qed
+\end{proof} \end{lemma}
+%-----------------------------------------------------------------------------------------------%
+\subsection{Spheres and homotopy groups}
+Of course, one cannot mention homotopy theory without discussing spheres. Indeed, the spheres are generated iteratively by the \defn{suspension} type former \( \Sus \), where given \( X : \U \) the type \( \Sus(X) \) has constructors
+\[ N, S : \Sus(X), \hspace{50pt} \merid : X \to (N = S). \]
+The suspension takes terms of \( X \) and turns them into paths between two additional points, imagined as the north and south poles of the new type. The spheres are indexed by \( \N \) and are denoted
+\[ \begin{array}{rcll}
+	\S^{0} &\eql& \Sus(\0) &\simeq \2, \\
+	\S^{\succ(n)} &\eql& \Sus(\S^{n}).
+\end{array} \]
+We have \( N : \S^{1} \) and \( \merid(0_{\2}) \bullet \merid(1_{\2})^{-1} : N = N \). For simplicity, we give them the names
+\[ \base : \S^{1}, \hspace{50pt} \looop : \base = \base. \]
+Since \( 0_{\2} \neq 1_{\2} \), we have \( \merid(0_{\2}) \neq \merid(1_{\2}) \), and so \( \refl_{\base} \neq \looop \). Thus \( \S^{1} \) is a 1-type.
+The induction principle for suspensions takes the following form:
+\[ \begin{array}{c}
+	\ind_{\Sus(X)} : \tpi{C : \Sus(X) \to \U} \tpi{n : C(N)} \tpi{s : C(S)} (\tpi{x : X} \merid(x)_{\ast}(n) = s) \to \tpi{x : \Sus(X)} C(x) \\[3pt]
+	\begin{array}{rcl}
+		\ind_{\Sus(X)}(C, n, s, m, N) &\eql& n, \\
+		\ind_{\Sus(X)}(C, n, s, m, S) &\eql& s,
+	\end{array}
+\end{array} \]
+and for each \( x : X \) we have \( \apd_{\ind_{\Sus(X)}(C, n, s, m)}(\merid(x)) = m(x) \).
+
+To define homotopy groups, we must consider an additional type former \( \Omega \), which given \( X : \U \) and a ``basepoint'' term \( x : X \) is the type
+\[ \Omega(X, x) \eql (x = x, \refl_{x}), \]
+called the \defn{loop space at \( x \)}, where the new ``basepoint'' term is \( \refl_{x} \). The \defn{iterated loop space} is also indexed by \( \N \) and is defined as
+\[ \begin{array}{rcl}
+	\Omega^{0}(X, x) &\eql& (X, x) \\
+	\Omega^{\succ(n)}(X, x) &\eql& \Omega^{n}(\Omega(X, x)).
+\end{array} \]
+The \defn{homotopy groups} of a type \( X : \U \) with basepoint \( x : X \) are then the types
+\[ \pi_{n}(X, x) \eql \norm[\Omega^{n}(X, x)]_{0}, \]
+whose group structure is inherited from path inversion and concatenation. It is not too convoluted to prove that \( \pi_{1}(\S^{1}) \) is equivalent to the group of integers; indeed, the key observation is that \( \refl_{\base} \) maps to \( 0 \) and \( \looop \) maps to \( 1 \) under the equivalence, whereas inversion becomes negation and concatenation becomes addition.
+%===============================================================================================%
+\section{Conclusion}
+We have seen what it means for a framework to be a formal system, how homotopy type theory differs from set-based descriptions of mathematics, and the formulation of several familiar concepts inside HoTT. Perhaps the key observation is that, by treating general formulae as functions with specific domains, we can rigidify the world of classical mathematics into a constructive, proof-relevant framework.
+
+There are other areas of set theory that can be synthesized in HoTT; perhaps the simplest notion is that of \defn{cardinal numbers}, where the type \( \textbf{Card} \eql \norm[\Set]_{0} \), the set-truncation of the type of sets. In this case we have cardinal addition induced by the coproduct, cardinal multiplication induced by the pair, and cardinal exponentiation induced by the function type former. There is also a type for the real numbers, but there are multiple ways to construct it and their equivalence follows only from \( \AC \).
+
+The interpretations such as propositions-as-types, and programs-as-proofs, make HoTT as a deductive system more suitable than ZF for computer-assisted theorem proving. Indeed, much of the theory has already been formalized in the Coq programming language, and is freely available to download and tinker with. There are extensions of HoTT, as well; a notable one is called cubical type theory, in which univalence is not an axiom, but a theorem! One drawback is that the IML equality types are not synonymous with the notion of paths in the models of cubical type theory, but they are provably equivalent. \newpage
+%===============================================================================================%
+\bibliographystyle{plain}
+\bibliography{Homotopy}
+\nocite{*}
+%&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&%
+\end{document}
