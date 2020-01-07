@@ -1,0 +1,521 @@
+%===============================================================================================%
+\documentclass{beamer}
+\usefonttheme{professionalfonts}
+\beamertemplatenavigationsymbolsempty
+%-----------------------------------------------------------------------------------------------%
+\usepackage{geometry}
+\usepackage{graphicx}
+\usepackage{amssymb}
+\usepackage{mathtools}
+\usepackage{amsthm}
+\usepackage{titlesec}
+\usepackage{tikz}
+%\usepackage{enumitem}
+\usepackage{xcolor}
+\usepackage{bm}
+\usepackage[theorems, breakable, skins]{tcolorbox}
+\usepackage[T1]{fontenc}
+\usepackage{sfmath}
+\usepackage[sfdefault]{cabin}
+%-----------------------------------------------------------------------------------------------%
+%\setlist{nosep, leftmargin = 24pt}
+%\setlist[itemize]{label = \( \bullet \)}
+\setlength{\arraycolsep}{2pt}
+\everydisplay{\textstyle}
+\tcbset{melanie/.style = {sharp corners, colback = white, left = 1mm, right = 1mm, top = 1mm, bottom = 1mm, beforeafter skip = 12pt, breakable, enhanced jigsaw, parbox = false}}
+\tcbset{melaniethm/.style = {colbacktitle = MPBthm!75!black, colframe = MPBthm, colupper = MPBthm!75!black, collower = MPBthm}}
+%-----------------------------------------------------------------------------------------------%
+\definecolor{MPBsection}{rgb} {  0, 0.33,   1}%{1,1,1}
+\definecolor{MPBtitle}  {rgb} {  0, 0.75,   1}%{1,1,1}
+\definecolor{MPBthm}    {rgb} {  0,  0.6, 0.6}%{1,1,1}
+\definecolor{MPBexample}{rgb} {0.1,  0.6, 0.4}%{1,1,1}
+\definecolor{MPBemph}   {rgb} {0.6,  0.2,   1}%{1,1,1}
+%===============================================================================================%
+\mode<presentation>{
+	\usetheme{Berkeley}
+	\setbeamercolor{structure}        {                 fg = MPBthm}
+	\setbeamercolor{titlelike}        {use = structure, fg = MPBthm, bg = white}
+	\setbeamercolor{palette primary}  {use = structure, fg = MPBthm, bg = MPBthm!33}
+	\setbeamercolor{palette secondary}{use = structure, fg = MPBthm, bg = MPBthm!66}
+	\setbeamercolor{sidebar}          {use = structure, bg = MPBthm!17}
+	\setbeamercolor{block title}      {use = structure, fg = MPBthm, bg = MPBthm!50}
+	\setbeamercolor{block body}       {use = structure, bg = MPBthm!17}
+	\setbeamercolor{alerted text}     {fg = MPBtitle}
+	\setbeamertemplate{itemize items}[circle]
+}
+
+\newcommand{\defn}[1]{{\scshape\bfseries\color{MPBemph}#1}}
+\renewcommand{\qed}{\hfill\( \color{MPBthm} \blacksquare \)}
+\newcommand{\dash}{\rule[0.5ex]{1.5ex}{0.4pt}}
+
+\newcommand{\eql}{\mathbin{:\equiv}}
+\newcommand{\U}{\textbf{U}}
+\newcommand{\tpi}[1]{\prod_{(#1)}}
+\newcommand{\tsigma}[1]{\sum_{(#1)}}
+\DeclareMathOperator{\rec}{rec}
+\DeclareMathOperator{\ind}{ind}
+\DeclareMathOperator{\pr}{pr}
+\newcommand{\1}{\textbf{1}}
+\newcommand{\0}{\mathbf{0}}
+\DeclareMathOperator{\inl}{in\ell}
+\DeclareMathOperator{\inr}{in\mathnormal{r}}
+\newcommand{\2}{\textbf{2}}
+\newcommand{\N}{\textbf{N}}
+\renewcommand{\succ}{\operatorname{succ}}
+\DeclareMathOperator{\refl}{refl}
+\DeclareMathOperator{\ap}{ap}
+\DeclareMathOperator{\transport}{transport}
+\DeclareMathOperator{\id}{id}
+\DeclareMathOperator{\happly}{happly}
+\DeclareMathOperator{\isEquiv}{isEquiv}
+\DeclareMathOperator{\funext}{funext}
+\DeclareMathOperator{\eqtoequiv}{eqtoequiv}
+\DeclareMathOperator{\ua}{ua}
+\DeclareMathOperator{\isProp}{isProp}
+\DeclareMathOperator{\witness}{witness}
+\newcommand{\abs}[1][\cdot]{\left|#1\right|}
+\newcommand{\norm}[1][\cdot]{\left\|#1\right\|}
+\DeclareMathOperator{\isSet}{isSet}
+\newcommand{\Prop}{\textbf{Prop}}
+\newcommand{\Set}{\textbf{Set}}
+\renewcommand{\P}{\textbf{P}}
+\newcommand{\Card}{\textbf{Card}}
+\DeclareMathOperator{\LEM}{LEM}
+\DeclareMathOperator{\AC}{AC}
+%-----------------------------------------------------------------------------------------------%
+\newcounter{thms}
+\newcommand{\numberthis}{\addtocounter{thms}{1}\tag{\thethms}}
+\newtcbtheorem[use counter = thms, number within = subsection]
+	{lem}{Lemma}{melanie, melaniethm}{}{}
+\newtcbtheorem[use counter from = lem]
+	{thm}{Theorem}{melanie, melaniethm}{}{}
+\newtcbtheorem[use counter from = lem]
+	{cor}{Corollary}{melanie, melaniethm}{}{}
+\newtcbtheorem[use counter from = lem]
+	{axiom}{Axiom}{melanie, melaniethm}{}{}
+\newtcbtheorem[use counter from = lem]
+	{ex}{example}{melanie, detach title, before upper = {\tcbtitle~}, coltitle = MPBexample, colback = white, colframe = MPBexample, terminator sign = {}, rounded corners}{}{}
+\renewtcolorbox{proof}[1][\proofname]{detach title, adjusted title = \emph{#1:}, coltitle = MPBthm, before upper = {\tcbtitle~~}, colframe = MPBthm, colback = MPBthm!15, size = small, beforeafter skip = 12pt, parbox = false, breakable}
+%-----------------------------------------------------------------------------------------------%
+\title[Homotopy Type Theory]{Homotopy Type Theory as an \\ Alternative Foundation to Mathematics}
+\author{Melanie Brown}
+\date{}
+%===============================================================================================%
+
+\begin{document}
+\let\OD\displaystyle
+\let\displaystyle\textstyle
+%&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&%
+\begin{frame}{}
+	\titlepage
+\end{frame}
+%-----------------------------------------------------------------------------------------------%
+\begin{frame}{Synopsis}
+\setbeamercovered{transparent}
+\begin{itemize}
+	\item<1> History and purpose of type theory
+	\item<2> Types and universes
+	\item<3> Function extensionality and the univalence axiom
+	\item<4> Propositions and sets
+\end{itemize} \end{frame}
+%-----------------------------------------------------------------------------------------------%
+\begin{frame}{History}
+\setbeamercovered{transparent}
+\begin{itemize}
+	\item<1> \emph{Principia Mathematica}, 1910
+	\item<0> Simply-typed \( \lambda \)-calculus, 1940
+	\item<0> Intuitionistic type theory, 1972
+	\item<0> Homotopy type theory, 2007
+\end{itemize} \end{frame}
+%-----------------------------------------------------------------------------------------------%
+\begin{frame}{History}{Russell's paradox}
+Does the set of all sets that don't contain themselves contain itself?
+\[ \mathcal{S} = \{ S \text{ set} \mid S \notin S \} \]
+\[ \mathcal{S} \in \mathcal{S} \text{~ or ~} \mathcal{S} \notin \mathcal{S}? \]
+\end{frame}
+%-----------------------------------------------------------------------------------------------%
+\begin{frame}{History}
+\setbeamercovered{transparent}
+\begin{itemize}
+	\item<0> \emph{Principia Mathematica}, 1910
+	\item<1> Simply-typed \( \lambda \)-calculus, 1940
+	\item<2> Intuitionistic type theory, 1972
+	\item<3> Homotopy type theory, 2007
+\end{itemize} \end{frame}
+%-----------------------------------------------------------------------------------------------%
+\begin{frame}{Notation}
+\begin{itemize}[<+- >]
+	\item \( \;\equiv \) denotes \defn{synonymy}
+	\item \( \eql \) denotes \defn{definition}
+	\item \( = \) has a special meaning
+\end{itemize} \end{frame}
+	%The symbol \( \equiv \) denotes the equivalence relation of \defn{synonymy}. Two symbols \( x \) and \( y \) are synonymous if they have the same definition. Synonymous symbols can be replaced with one another without worry. \\[6pt]
+	%The symbol \( \eql \) denotes a \defn{definition}. In the statement \( x \eql y \), the symbol \( x \) is defined to be synonymous with the symbol \( y \), in order to convey meaning to the reader.
+%-----------------------------------------------------------------------------------------------%
+\begin{frame}{Types and universes}
+\begin{itemize}[<+- >]
+	\item A \defn{type} is a logical demarcation that restricts formulae
+	\item A \defn{term} is a formula that has a specific type: in order to use a formula \( \alpha \), we must have previously declared \( \alpha : X \), where \( X \) is some type
+\end{itemize} \end{frame}
+%-----------------------------------------------------------------------------------------------%
+\begin{frame}{Types and universes}
+\begin{itemize}[<+- >]
+	\item A \defn{universe} is a type whose terms are also types. There is a hierarchy
+	\[ \U_{0} : \U_{1} : \U_{2} : \dotsb \]
+	where \( \U_{0} \) is called the \defn{base universe}.
+	\item We can think of types in \( \U_{i} \) as belonging to every universe \( \U_{j} \) where \( j \geq i \).
+	\item Constructions are valid at any universe level, so we drop the index and write \( \U \) for the ``type of types''
+\end{itemize}
+\end{frame}
+%-----------------------------------------------------------------------------------------------%
+\begin{frame}{Types and universes}
+A type is specified using four pieces of information:
+\begin{itemize}
+\setbeamercovered{transparent}
+	\item<1> \alert<1>{formation rules}: what other types are required to create it;
+	\item<2> \alert<2>{construction rules}: how to create standard terms;
+	\item<3> \alert<3>{elimination rules}: how to use generic terms in expressions;
+	\item<4> \alert<4>{computation rules}: how eliminators act on constructors.
+\end{itemize}
+\end{frame}
+%-----------------------------------------------------------------------------------------------%
+\begin{frame}{Types and universes: Function types}{Construction rules}
+Let \( X \) and \( Y \) be types. The type of \defn{functions}, written \( X \to Y \), is formed from these two types, and its terms are constructed using \defn{\( \lambda \)-expressions} of the form
+\[ \lambda(x : X).~ (y : Y) : X \to Y. \]
+\pause
+A \defn{type family} \( Z : X \to \U \) is a type-valued function, where the types \( Z(x) \) depend on the particular \( x : X \) chosen. The type of \defn{dependent functions} is then written \( \tpi{x : X} Z(x) \), and its terms are constructed with \( \lambda \)-expressions of the form
+\[ \lambda(x : X).~ (z : Z(x)) : \tpi{x : X} Z(x). \]
+\end{frame}
+%-----------------------------------------------------------------------------------------------%
+\begin{frame}{Types and universes: Function types}{Elimination \& computation rules}
+\begin{itemize}[<+- >]
+	\item The elimination rule for \( X \to Y \) is, given \( w : X \) and \( f : X \to Y \), we have a term \( f(w) : Y \).
+	\item Similarly, if we are given \( w : X \) and \( g : \tpi{x : X} Z(x) \), then \( g(w) : Z(w) \).
+	\item The computation rule is, given \( w : X \) and the \( \lambda \)-expression \( f \eql \lambda(x : X).~ (y : Y) \), we let \( f(w) \equiv y[w/x] \), where \( y[w/x] \) is the formula \( y \) but with each occurrence of the term \( x \) replaced by \( w \).
+\end{itemize} \end{frame}
+%-----------------------------------------------------------------------------------------------%
+\begin{frame}{Types and universes}
+\begin{itemize}[<+- >]
+	\item For other types, the elimination and computation rules can be combined in one function definition
+	\item The elimination rule is given by the type, and the computation rule by the function definition
+	\item For constant terms in another type, this function is called the \defn{recursion principle}
+	\item For terms of a type family, it is called the \defn{induction principle}
+\end{itemize} \end{frame}
+	%The elimination and computation rules for the remaining types are more easily described in the form of functions. Indeed, we want to describe how to \emph{use} the terms of a type \( X \), which is no different from defining a formula in which they should appear. \\[6pt]
+	%We can use terms of \( X \) to describe constant terms in another type \( Y \), or we can use them to describe terms of dependent types through a type family \( Z : X \to \U \). In the case of a constant type \( Y \), we call this principle \defn{recursion}, and in the dependent case we refer to it as \defn{induction}.
+%-----------------------------------------------------------------------------------------------%
+\begin{frame}{Types and universes: Pair types}{Construction rules}
+The \defn{pair type} is formed from two types \( X, Y \), and is written \( X \times Y \). Its terms are constructed using the function
+\[ (\dash, \dash) : X \to Y \to X \times Y; \]
+which means standard terms are of the form \( (x, y) : X \times Y \), where \( x : X \) and \( y : Y \). \\[6pt]
+\pause
+Let \( Z : X \to \U \) be a type family. The \defn{dependent pair type} \( \tsigma{x : X} Z(x) : \U \), and its terms are of the form \( (x, z) \), where \( x : X \) and \( z : Z(x) \).
+\end{frame}
+%-----------------------------------------------------------------------------------------------%
+\begin{frame}{Types and universes: Pair types}{Elimination \& computation rules}
+\begin{itemize}[<+- >]
+	\item The \defn{recursion principle} tells us how to create terms of a constant type \( Z : \U \) from a pair.
+	\[ \begin{array}{c}
+		\rec_{\times} : \tpi{Z : \U} (X \to Y \to Z) \to (X \times Y \to Z)	\\[3pt]
+		\rec_{\times}(Z, f, (x, y)) \eql f(x, y).
+	\end{array} \]
+	\item The \defn{induction principle} tells us how to create terms of types depending on pairs:
+	\[ \scriptsize\begin{array}{c}
+		\ind_{\times} : \tpi{Z : X \times Y \to \U} \big(\tpi{x : X} \tpi{y : Y} Z((x, y))\big) \to (\tpi{p : X \times Y} Z(p)) \\[6pt]
+		\ind_{\times}(Z, f, (x, y)) \eql f(x, y).
+	\end{array} \]
+\end{itemize} \end{frame}
+%-----------------------------------------------------------------------------------------------%
+\begin{frame}{Types and universes: Pair types}{Extra bits}
+There are some useful functions, called the \defn{projections}, from pairs to their constituents. Let \( X, Y : \U \), \( Z : X \to \U \), and suppose that \( x : X \), \( y : Y \), and \( z : Z(x) \). We have
+\[ \begin{array}{c}
+	\pr_{1}((x, y)) \eql x, \hspace{1em} \pr_{2}((x, y)) \eql y; \\[3pt]
+	\pr_{1}((x, z)) \eql x, \hspace{1em} \pr_{2}((x, z)) \eql z.
+\end{array} \]
+\pause
+{\color{MPBexample}exercise:} Write down the type of \( \pr_{2} \) in the dependent case.
+\end{frame}
+%-----------------------------------------------------------------------------------------------%
+\begin{frame}{Types and universes: Concrete types}{Unit type}
+\begin{itemize}[<+- >]
+	\item Concrete types need no information to be formed
+	\item The \defn{unit type} \( \1 : \U \) is concrete and has one constructor, \[ \ast : \1 \]
+	\item Recursion and induction principles:
+	\[ \begin{array}{c}
+		\rec_{\1} : \tpi{Z : \U} Z \to \1 \to Z \\[3pt]
+		\rec_{\1}(Z, z, \ast) \eql z; \\[12pt]
+		\ind_{\1} : \tpi{Z : \1 \to \U} Z(\ast) \to \tpi{u : \1} Z(u) \\[3pt]
+		\ind_{\1}(Z, z, \ast) \eql z.
+	\end{array} \]
+\end{itemize} \end{frame}
+%-----------------------------------------------------------------------------------------------%
+\begin{frame}{Types and universes: Concrete types}{Empty type}
+\begin{itemize}[<+- >]
+	\item The \defn{empty type} \( \0 : \U \) is a concrete type, with no constructors
+	\item Type families can't depend on anything, so there is only a recursion principle:
+	\[ \begin{array}{c}
+		\rec_{\0} : \tpi{Z : \U} \0 \to Z
+	\end{array} \]
+	\item A term \( {!} : \0 \) is called a \defn{contradiction}, since there is no way to create a standard term
+	\item Types with terms are called \defn{inhabited}; here \( \0 \) is uninhabited
+\end{itemize} \end{frame}
+%-----------------------------------------------------------------------------------------------%
+\begin{frame}{Types and universes: Concrete types}{Natural numbers}
+\begin{itemize}[<+- >]
+	\item The type of \defn{natural numbers} \( \N : \U \) is concrete, and has two constructors:
+	\[ 0 : \N, \hspace{2em} \succ : \N \to \N. \]
+	\item Here we see the namesake of the recursion and induction principles:
+	\[\scriptsize \begin{array}{c}
+		\rec_{\N} : \tpi{Z : \U} Z \to (\N \to Z \to Z) \to (\N \to Z) \\[3pt]
+		\begin{array}{rcl}
+			\rec_{\N}(Z, z_{0}, z_{s}, 0) &\eql& z_{0}, \\
+			\rec_{\N}(Z, z_{0}, z_{s}, \succ(n)) &\eql& z_{s}(n, \rec_{\N}(Z, z_{0}, z_{s}, n));
+		\end{array} \\[12pt]
+		\ind_{\N} : \tpi{Z : \N \to \U} Z(0) \to (\tpi{n : \N} Z(n) \to Z(\succ(n))) \to (\tpi{n : \N} Z(n)) \\[3pt]
+		\begin{array}{rcl}
+			\ind_{\N}(Z, z_{0}, z_{s}, 0) &\eql& z_{0}, \\
+			\ind_{\N}(Z, z_{0}, z_{s}, \succ(n)) &\eql& z_{s}(n, \ind_{\N}(Z, z_{0}, z_{s}, n)).
+		\end{array}
+	\end{array} \]
+\end{itemize} \end{frame}
+%-----------------------------------------------------------------------------------------------%
+\begin{frame}{Types and universes: Coproduct types}{Construction rules}
+Let \( X, Y : \U \). The \defn{coproduct type} \( (X + Y) : \U \) also has two constructors:
+\[ \inl : X \to X + Y, \hspace{2em} \inr : Y \to X + Y. \]
+The standard terms of \( X + Y \) are of the form \( \inl(x) \) for some \( x : X \) or \( \inr(y) \) for some \( y : Y \), but none use terms of both \( X \) and \( Y \) for their construction.
+\end{frame}
+%-----------------------------------------------------------------------------------------------%
+\begin{frame}{Types and universes: Coproduct types}{Elimination \& computation rules}
+\begin{itemize}[<+- >]
+	\item Recursion principle:
+\[ \begin{array}{c}
+	\rec_{+} : \tpi{Z : \U} (X \to Z) \to (Y \to Z) \to (X + Y \to Z) \\[3pt]
+	\begin{array}{rcl}
+		\rec_{+}(Z, f, g, \inl(x)) &\eql& f(x), \\
+		\rec_{+}(Z, f, g, \inr(y)) &\eql& g(y).
+	\end{array}
+\end{array} \]
+	\item Induction principle: same definition, but with the type
+\end{itemize}
+\only<2>{\[\scriptsize \begin{array}{c} \ind_{+} : \tpi{Z : X + Y \to \U} (\tpi{x : X} Z(\inl(x))) \to (\tpi{y : Y} Z(\inr(y))) \to (\tpi{p : X + Y} Z(p)). \end{array} \]}
+\end{frame}
+%-----------------------------------------------------------------------------------------------%
+\begin{frame}{Types and universes: Path types}{Construction rules}
+\begin{itemize}[<+- >]
+	\item The \defn{path type} within a type \( X : \U \) is formed using \( {=} : X \to X \to \U \), using two terms \( x, y : X \) to make \( (x = y) : \U \)
+	\item Terms of this type represent paths between \( x \) and \( y \)
+	\item The type \( x = x \) has one constructor: \( \refl_{x} : x = x \), called \defn{reflexivity}
+	\item There are no standard terms of \( x = y \) when \( x \not\equiv y \)
+	\item Intuition for induction: terms of the type family \( (x = \dash) : X \to \U \) created by ``dragging'' the other endpoint around the type
+\end{itemize} \end{frame}
+%-----------------------------------------------------------------------------------------------%
+\begin{frame}{Types and universes: Path types}{Elimination \& computation rules}
+\begin{itemize}[<+- >]
+	\item No recursion principle: paths are inherently dependent
+	\item The type family in the induction depends on \emph{any} path between \emph{any} two terms of \( X \)
+\end{itemize}~
+\only<3-4>{\[\scriptsize \begin{array}{c}
+	\ind_{=} : \tpi{Z : \tpi{x, y : X} (x = y) \to \U} \big(\tpi{x : X} Z(x, x, \refl_{x})\big) \to \tpi{x, y : X} \tpi{p : x = y} Z(x, y, p) \\[3pt]
+	\ind_{=}(Z, f, x, x, \refl_{x}) \eql f(x).
+\end{array} \]}\pause
+\begin{itemize}
+	\item We only know how to apply the function to standard terms.
+\end{itemize} \end{frame}
+%-----------------------------------------------------------------------------------------------%
+\begin{frame}{Types and universes: Path types}{Important lemmas}
+\small
+\begin{lem*}{Path inversion} Let \( X : \U \), \( x, y : X \), and \( p : x = y \). Then there is a term \( p^{-1} : y = x \).
+\only<2-4>{\vspace{-12pt}\begin{proof}
+	Using the induction principle, we need only consider the case when \( x \equiv y \) and \( p \equiv \refl_{x} : x = x \). But now we can define \( \refl_{x}^{-1} \eql \refl_{x} : x = x \). \qed
+\end{proof}} \end{lem*}
+\only<3-4>{\begin{lem*}{Path concatenation} Let \( X : \U \), \( x, y, z : X \), and \( p : x = y \), \( q : y = z \). Then there is a term \( p \bullet q : x = z \).
+\only<4>{\vspace{-6pt}\begin{proof}
+	Using the induction principle (twice), it suffices to consider when \( x \equiv y \equiv z \) and \( p \equiv q \equiv \refl_{x} : x = x \). But in this case, we can set \( \refl_{x} \bullet \refl_{x} \eql \refl_{x} \). \qed
+\end{proof}} \end{lem*}}
+\end{frame}
+%-----------------------------------------------------------------------------------------------%
+\begin{frame}{Function extensionality and univalence}{Homotopies}
+\begin{itemize}[<+- >]
+	\item What does it mean for two functions to be equal?
+	\item Let \( X, Y : \U \) and \( f, g : X \to Y \). We can define
+	\[ f \sim g \eql \tpi{x : X} (f(x) = g(x)) \]
+	to be the type of \defn{homotopies} between \( f \) and \( g \).
+	\item Homotopy is an equivalence relation. We can also define
+	\[ \happly : (f = g) \to (f \sim g) \]
+	by path induction, where \( \happly(\refl_{f}) \eql \lambda(x : X).~\refl_{f(x)} \).
+\end{itemize}
+\end{frame}
+%-----------------------------------------------------------------------------------------------%
+\begin{frame}{Function extensionality and univalence}{Type equivalence}
+Let \( X, Y : \U \) and \( f : X \to Y \). We call \( f \) an \defn{equivalence} if
+\only<1>{\[ \isEquiv(f) \eql \tsigma{g : Y \to X} (g \circ f \sim \id_{X}) \times \tsigma{h : Y \to X} (f \circ h \sim \id_{Y}) \]}
+\only<2->{\[ \scriptsize\begin{array}{rcl}
+	\isEquiv(f) &\eql& \tsigma{g : Y \to X} (g \circ f \sim \id_{X}) \times \tsigma{h : Y \to X} (f \circ h \sim \id_{Y}) \\[6pt]
+	&\eql& \tsigma{g : Y \to X} (\tpi{x : X} (g(f(x)) = x)) \times \tsigma{h : Y \to X} (\tpi{y : Y} (f(h(y)) = y))
+\end{array} \]}
+\only<3>{We write the type of \defn{equivalences}
+\[ X \simeq Y \eql \tsigma{f : X \to Y} \isEquiv(f). \]}
+\end{frame}
+%-----------------------------------------------------------------------------------------------%
+\begin{frame}{Function extensionality and univalence}{Type equivalence}
+\begin{ex*}{\null} For each \( X : \U \), \( \id_{X} : X \simeq X \). \end{ex*} \pause
+\begin{itemize}[<+- >]
+	\item Type equivalence is an equivalence relation.
+	\item A \defn{quasi-inverse} to \( f : X \to Y \) is a function \( g : Y \to X \) with both \( g \circ f \sim \id_{X} \) and \( f \circ g \sim \id_{Y} \).
+	\item Having a quasi-inverse means being an equivalence; the converse also holds.
+	\item There may be more than one quasi-inverse, but two equivalences are always equal!
+	\item This lets us ignore the term of \( \isEquiv(f) \) and write \( f : X \simeq Y \).
+\end{itemize} \end{frame}
+%-----------------------------------------------------------------------------------------------%
+\begin{frame}{Function extensionality and univalence}{Function extensionality}
+\begin{axiom*}{Function extensionality} Let \( X, Y : \U \) and \( f, g : X \to Y \). We posit that
+\[ \happly : (f = g) \to (f \sim g) \]
+is an equivalence, with a quasi-inverse
+\[ \funext : (f \sim g) \to (f = g). \]
+That is, in HoTT, homotopy is equivalent to equality.
+\[ (f \sim g) \simeq (f = g) \]
+\end{axiom*} \end{frame}
+%-----------------------------------------------------------------------------------------------%
+\begin{frame}{Function extensionality and univalence}{Univalence}
+There is a function similar to \( \happly \), but for paths in \( \U \). We saw that \( \id_{X} : X \simeq X \) for each \( X : \U \). We can create a function
+\[ \eqtoequiv : (X = Y) \to (X \simeq Y) \]
+by path induction, where \( \eqtoequiv(\refl_{X}) \eql \id_{X} \).
+\pause
+\begin{axiom*}{Univalence} Let \( X, Y : \U \). We posit that \( \eqtoequiv \) is an equivalence, with a quasi-inverse
+\[ \ua : (X \simeq Y) \to (X = Y). \]
+That is,
+\[ (X = Y) \simeq (X \simeq Y). \]
+\end{axiom*} \end{frame}
+%-----------------------------------------------------------------------------------------------%
+\begin{frame}{Propositions and sets}{Propositions}\small
+\begin{itemize}[<+- >]
+	\item Different proofs of a proposition are all equally valid at \emph{letting us use the result}
+	\item Different terms of a type are equally valid at showing its \emph{inhabitedness}
+	\item A \defn{proposition} is a type that contains only the information of inhabitedness:
+	\[ \isProp(X) \eql \tpi{x, y : X} (x = y). \]
+	\item Any type \( X : \U \) can be ``truncated'' to a proposition, written \( \norm[X] : \U \):
+	\[ \abs : X \to \norm[X], \hspace{15pt} \witness : \tpi{x, y : \norm[X]} (x = y). \]
+	\item For any \( X : \U \) and \( x, y : X \), we always have \( \witness(x, y) : \abs[x] = \abs[y] \), even if we don't have \( x = y \).
+\end{itemize} \end{frame}
+%-----------------------------------------------------------------------------------------------%
+\begin{frame}{Propositions and sets}{Important lemmas}
+\begin{lem*}{} \( \0 \) and \( \1 \) are propositions. \end{lem*}\pause
+\begin{lem*}{} Let \( P, Q : \U \) be propositions. If \( P \to Q \) and \( Q \to P \), then \( P \simeq Q \). \end{lem*}\pause
+\begin{lem*}{} Let \( X : \U \) be inhabited, and suppose \( \isProp(X) \). Then \( X \simeq {\1} \). \end{lem*}
+\end{frame}
+%-----------------------------------------------------------------------------------------------%
+\begin{frame}{Propositions and sets}{Traditional logical notation}
+If \( P, Q : \U \) are propositions, then we can use the traditional propositional logic in the following way:
+\[ \begin{array}{ccc}
+	\text{Traditional} &\hspace{5pt}& \text{HoTT} \\ \hline
+	\neg P && P \to \0 \\
+	P \wedge Q && P \times Q \\
+	P \vee Q && \norm[P + Q] \\
+	P \Rightarrow Q && P \to Q \\
+	P \Leftrightarrow Q && P = Q.
+\end{array} \]
+Let \( X : \U \) and suppose \( Z : X \to \U \) is a family of propositions, \emph{i.e.} \( \tpi{x : X} \isProp(Z(x)) \). Then we also have quantifiers:
+\[ \begin{array}{ccc}
+	\exists(x : X).~Z(x) &\hspace{5pt}& \norm[\tsigma{x : X} Z(x)] \\[3pt]
+	\forall(x : X).~Z(x) && \tpi{x : X} Z(x).
+\end{array} \]
+\end{frame}
+%-----------------------------------------------------------------------------------------------%
+\begin{frame}{Propositions and sets}{Sets}
+\begin{itemize}[<+- >]
+	\item We can make path types of path types: if we have \( X : \U \), \( x, y : X \), and \( p, q : x = y \), then we can also make \( p = q : \U \)
+	\item When the path type on \( X \) is a proposition, we say that \( X \) is a \defn{set}:
+	\[ \begin{array}{rrl}
+	\isSet(X) &\eql& \tpi{x, y : X} \isProp(x = y) \\ &\equiv& \tpi{x, y : X} \tpi{p, q : x = y} (p = q).
+\end{array} \]
+	\item Any type \( X \) can be made into a set, \( \norm[X]_{0} \):
+	{\small\[ \abs_{0} : X \to \norm[X]_{0}, \hspace{15pt} \witness_{0} : \tpi{x, y : \norm[X]_{0}} \tpi{p, q : x = y} (p = q). \]}
+	\item Propositions are sets: higher paths collapse when all terms are equal
+\end{itemize} \end{frame}
+%-----------------------------------------------------------------------------------------------%
+\begin{frame}{Propositions and sets}{Subsets and powersets}
+\begin{lem*}{} Let \( X : \U \). Then \( \isProp(X) \) and \( \isSet(X) \) are propositions. \end{lem*} \pause
+\begin{itemize}[<+- >]
+	\item \only<2>{We can write
+	\[ \begin{array}{rcl}
+		\Prop &\eql& \tsigma{X : \U} \isProp(X), \\
+		\Set &\eql& \tsigma{X : \U} \isSet(X)
+	\end{array} \] and also \( X : \Prop \) or \( Y : \Set \)}
+	\only<3->{We can write
+	\[ \begin{array}{rcl}
+		\Prop_{i} &\eql& \tsigma{X : \U_{i}} \isProp(X), \\
+		\Set_{i} &\eql& \tsigma{X : \U_{i}} \isSet(X)
+	\end{array} \] and also \( X : \Prop_{i} \) or \( Y : \Set_{i} \)}
+	\item Sub-universes: \( \Prop_{i}, \Set_{i} : \U_{i + 1} \)
+	\item For \( X : \Set_{i} \), we write \( \P(X) \eql X \to \Prop_{i} \) for the type of \defn{subsets}
+\end{itemize} \end{frame}
+%-----------------------------------------------------------------------------------------------%
+\begin{frame}{Propositions and sets}{Subset operations}
+\begin{itemize}
+	\item We can use traditional notation for subset operations:
+	\[ \begin{array}{c}
+		\dash^{\complement} : \P(X) \to \P(X) \\[3pt]
+		A^{\complement} \eql \lambda(x : X).~(\neg A(x))
+	\end{array} \]
+	\[ \begin{array}{c}
+		{\cup},\, {\cap},\, {\setminus} : \P(X) \to \P(X) \to \P(X) \\[3pt]
+		\begin{array}{rcl}
+			A \cup B &\eql& \lambda(x : X).~(A(x) + B(x)) \\
+			A \cap B &\eql& \lambda(x : X).~(A(x) \times B(x)) \\
+			A \setminus B &\eql& A \cap B^{\complement} \\
+			&\;\equiv& \lambda(x : X).~(A(x) \times (B(x) \to \0))
+		\end{array}
+	\end{array} \]
+\end{itemize} \end{frame}
+%-----------------------------------------------------------------------------------------------%
+\begin{frame}{Propositions and sets}{Differences from classical sets}
+\begin{itemize}[<+- >]
+	\item A classical set uses an equivalence relation to define equality, that may not coincide with the path type
+	\item Sets in HoTT are \emph{setoids} in traditional mathematics, since they have no such equivalence relation \emph{a priori}
+	\item No global membership operator (terms must have a type), but terms can be members of subsets:
+	\[ \begin{array}{c}
+		{\in} : X \to \P(X) \to \Prop \\[3pt]
+		x \in A \eql A(x).
+	\end{array} \]
+	Membership is the adjoint to evaluation!
+\end{itemize}
+\only<1-3>{\phantom{\begin{ex*}{The type \( \N \) is a set(oid), but not a proposition.} \end{ex*}}}
+\only<4>{\begin{ex*}{The type \( \N \) is a set(oid), but not a proposition.} \end{ex*}}
+ \end{frame}
+%-----------------------------------------------------------------------------------------------%
+\begin{frame}{Conclusion}{}
+\begin{itemize}[<+- >]
+	\item Types were developed to restrict the application of formulae to sensible domains
+	\item Type formers behave similarly to set constructions
+	\item Extensionality and univalence clarify how functions and types can be interchanged
+	\item HoTT models constructive propositional logic, and is consistent with \( \AC \) and \( \LEM \)
+	\item Sets can also be modelled in HoTT, but they differ slightly from classical interpretations
+\end{itemize} \end{frame}
+%-----------------------------------------------------------------------------------------------%
+\setbeamercolor{background canvas}{bg = black}
+\frame[plain]{}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+%&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&%
+\end{document}
